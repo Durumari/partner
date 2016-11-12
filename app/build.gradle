@@ -30,4 +30,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('libs/Naverspeech-1.0.4.jar')
     compile project(':daum-speech-openapi-4.0')
+    compile project(':reco-sdk-android_1.1.4')
 }

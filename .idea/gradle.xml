@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/daum-speech-openapi-4.0" />
             <option value="$PROJECT_DIR$/library-debug" />
+            <option value="$PROJECT_DIR$/reco-sdk-android_1.1.4" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
