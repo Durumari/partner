@@ -20,6 +20,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.a3did.partner.fragmentlist.AccountFragment;
@@ -33,6 +35,10 @@ import com.a3did.partner.fragmentlist.SafetyFragment;
 import com.a3did.partner.partner.utils.AudioWriterPCM;
 import com.naver.speech.clientapi.SpeechConfig;
 
+import net.daum.mf.speech.api.TextToSpeechClient;
+import net.daum.mf.speech.api.TextToSpeechListener;
+import net.daum.mf.speech.api.TextToSpeechManager;
+
 import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity
@@ -44,8 +50,7 @@ public class MainActivity extends AppCompatActivity
         DefaultFragment.OnFragmentInteractionListener,
         MissedListFragment.OnFragmentInteractionListener,
         RewardFragment.OnFragmentInteractionListener,
-        SafetyFragment.OnFragmentInteractionListener
-{
+        SafetyFragment.OnFragmentInteractionListener, TextToSpeechListener {
 
 
     DefaultFragment mDefaultFragment;
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity
     FloatingActionButton fab;
     int mFragmentID;
 
+    public static final String DAUM_KEY = "3d03690d5e27935dc3be9bb14c52ee98";
     private static String CLIENT_ID = "8_h3SjFEfYR7rygZLHz4"; // "내 애플리케이션"에서 Client ID를 확인해서 이곳에 적어주세요.
     private static SpeechConfig SPEECH_CONFIG = SpeechConfig.OPENAPI_KR; // or SpeechConfig.OPENAPI_EN
 
@@ -68,6 +74,7 @@ public class MainActivity extends AppCompatActivity
     private String mResult;
     private AudioWriterPCM writer;
     private boolean isRunning;
+    private TextToSpeechClient ttsClient;
 
     //Voice recognition Handler
     private void handleMessage(Message msg) {
@@ -130,8 +137,44 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
+        //Newton talk API 연동
+        TextToSpeechManager.getInstance().initializeLibrary(getApplicationContext());
+
+        if (ttsClient != null && ttsClient.isPlaying()) {
+            ttsClient.stop();
+            return;
+        }
+
+        String speechMode;
+        speechMode = TextToSpeechClient.NEWTONE_TALK_2;
+        speechMode = TextToSpeechClient.NEWTONE_TALK_1;
+
+        String voiceType;
+        voiceType = TextToSpeechClient.VOICE_MAN_READ_CALM;
+        voiceType = TextToSpeechClient.VOICE_WOMAN_READ_CALM;
+        voiceType = TextToSpeechClient.VOICE_MAN_DIALOG_BRIGHT;
+        voiceType = TextToSpeechClient.VOICE_WOMAN_DIALOG_BRIGHT;
+
+
+        double speechSpeed;
+        speechSpeed = 0.5;
+        speechSpeed = 2.0;
+        speechSpeed = 1.0;
+        ttsClient = new TextToSpeechClient.Builder()
+                .setApiKey(DAUM_KEY)
+                .setSpeechMode(speechMode)
+                .setSpeechSpeed(speechSpeed)
+                .setSpeechVoice(voiceType)
+                .setListener(MainActivity.this)
+                .build();
+
+        if (ttsClient.play("테스트 중입니다."))
+
+        //Naver API 연동
         handler = new RecognitionHandler(this);
         mNaverRecognizer = new NaverRecognizer(this, handler, CLIENT_ID, SPEECH_CONFIG);
+
+
 
         //Recognizer setting
         /*if (!isRunning) {
@@ -247,6 +290,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    // Android Life cycle
     @Override
     protected void onResume() {
         super.onResume();
@@ -265,6 +310,13 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        TextToSpeechManager.getInstance().finalizeLibrary();
+    }
+    ////////////////////////////////////////////////////////////////
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -361,6 +413,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
+
+
+
+
+
     // Declare handler for handling SpeechRecognizer thread's Messages.
     static class RecognitionHandler extends Handler {
         private final WeakReference<MainActivity> mActivity;
@@ -378,4 +436,67 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    //////////////////////////////Newton talk Listener//////
+    @Override
+    public void onFinished() {
+        int intSentSize = ttsClient.getSentDataSize();
+        int intRecvSize = ttsClient.getReceivedDataSize();
+
+        final String strInacctiveText = "onFinished() SentSize : " + intSentSize + " RecvSize : " + intRecvSize;
+
+        Log.i("Partner", strInacctiveText);
+        ttsClient = null;
+    }
+
+    @Override
+    public void onError(int code, String s) {
+        handleError(code);
+
+        ttsClient = null;
+    }
+
+    private void handleError(int errorCode) {
+        String errorText;
+        switch (errorCode) {
+            case TextToSpeechClient.ERROR_NETWORK:
+                errorText = "네트워크 오류";
+                break;
+            case TextToSpeechClient.ERROR_NETWORK_TIMEOUT:
+                errorText = "네트워크 지연";
+                break;
+            case TextToSpeechClient.ERROR_CLIENT_INETRNAL:
+                errorText = "음성합성 클라이언트 내부 오류";
+                break;
+            case TextToSpeechClient.ERROR_SERVER_INTERNAL:
+                errorText = "음성합성 서버 내부 오류";
+                break;
+            case TextToSpeechClient.ERROR_SERVER_TIMEOUT:
+                errorText = "음성합성 서버 최대 접속시간 초과";
+                break;
+            case TextToSpeechClient.ERROR_SERVER_AUTHENTICATION:
+                errorText = "음성합성 인증 실패";
+                break;
+            case TextToSpeechClient.ERROR_SERVER_SPEECH_TEXT_BAD:
+                errorText = "음성합성 텍스트 오류";
+                break;
+            case TextToSpeechClient.ERROR_SERVER_SPEECH_TEXT_EXCESS:
+                errorText = "음성합성 텍스트 허용 길이 초과";
+                break;
+            case TextToSpeechClient.ERROR_SERVER_UNSUPPORTED_SERVICE:
+                errorText = "음성합성 서비스 모드 오류";
+                break;
+            case TextToSpeechClient.ERROR_SERVER_ALLOWED_REQUESTS_EXCESS:
+                errorText = "허용 횟수 초과";
+                break;
+            default:
+                errorText = "정의하지 않은 오류";
+                break;
+        }
+
+        final String statusMessage = errorText + " (" + errorCode + ")";
+
+        Log.i("Newton talk error", statusMessage);
+    }
+    ///////////////////////////////////////////////////////
 }
