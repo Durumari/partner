@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
     private String mResult;
     private AudioWriterPCM writer;
     private boolean isRunning;
-    private TextToSpeechClient ttsClient;
+    public static TextToSpeechClient ttsClient;
 
     //Voice recognition Handler
     private void handleMessage(Message msg) {
@@ -103,6 +103,42 @@ public class MainActivity extends AppCompatActivity
                 String[] results = (String[]) msg.obj;
                 mResult = results[0];
                 //txtResult.setText(mResult);
+                if(ttsClient == null)
+                    break;
+                if(mResult.contains("파트너"))
+                {
+                    ttsClient.play("네 최준현님");
+                }
+                else if(mResult.contains("일정"))
+                {
+                    ttsClient.play("네 일정 탭으로 넘어갑니다.");
+                    transitionFragment(R.id.nav_assistant);
+                }
+                else if(mResult.contains("목표"))
+                {
+                    ttsClient.play("네 목표 탭으로 넘어갑니다.");
+                    transitionFragment(R.id.nav_achievement);
+                }
+                else if(mResult.contains("보상"))
+                {
+                    ttsClient.play("네 보상 탭으로 넘어갑니다.");
+                    transitionFragment(R.id.nav_reward);
+                }
+                else if(mResult.contains("설정"))
+                {
+                    ttsClient.play("네 설정 탭으로 넘어갑니다.");
+                    transitionFragment(R.id.nav_account);
+                }
+                else if(mResult.contains("완료"))
+                {
+                    ttsClient.play("네 완료리스트 탭으로 넘어갑니다.");
+                    transitionFragment(R.id.nav_completed_list);
+                }
+                else if(mResult.contains("실패"))
+                {
+                    ttsClient.play("네 실패리스트 탭으로 넘어갑니다.");
+                    transitionFragment(R.id.nav_missed_list);
+                }
                 break;
 
             case R.id.recognitionError:
@@ -128,6 +164,8 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
         Log.d("Partner","ID" + msg.what + "text result : " + mResult);
+
+
 
     }
     @Override
@@ -167,8 +205,7 @@ public class MainActivity extends AppCompatActivity
                 .setSpeechVoice(voiceType)
                 .setListener(MainActivity.this)
                 .build();
-
-        if (ttsClient.play("테스트 중입니다."))
+        ttsClient.play("파트너 앱 실행합니다.");
 
         //Naver API 연동
         handler = new RecognitionHandler(this);
@@ -228,6 +265,8 @@ public class MainActivity extends AppCompatActivity
                     // recognition commonly, so call stop().
                     mNaverRecognizer.getSpeechRecognizer().stop();
                 }
+
+
                 String title = "";
                 switch (mFragmentID)
                 {
@@ -340,14 +379,8 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-
-
+    public void transitionFragment(int id)
+    {
         switch (id)
         {
             /*case R.id.nav_main:
@@ -398,6 +431,17 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        return;
+    }
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        transitionFragment(id);
+
+
         return true;
     }
     private void DialogHtmlView(String title) {
@@ -446,14 +490,14 @@ public class MainActivity extends AppCompatActivity
         final String strInacctiveText = "onFinished() SentSize : " + intSentSize + " RecvSize : " + intRecvSize;
 
         Log.i("Partner", strInacctiveText);
-        ttsClient = null;
+        //ttsClient = null;
     }
 
     @Override
     public void onError(int code, String s) {
         handleError(code);
 
-        ttsClient = null;
+        //ttsClient = null;
     }
 
     private void handleError(int errorCode) {
