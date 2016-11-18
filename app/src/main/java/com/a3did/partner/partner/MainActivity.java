@@ -1,12 +1,16 @@
 package com.a3did.partner.partner;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.Html;
@@ -20,7 +24,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -33,15 +39,31 @@ import com.a3did.partner.fragmentlist.MissedListFragment;
 import com.a3did.partner.fragmentlist.RewardFragment;
 import com.a3did.partner.fragmentlist.SafetyFragment;
 import com.a3did.partner.partner.utils.AudioWriterPCM;
+import com.a3did.partner.recosample.RecoActivity;
+import com.a3did.partner.recosample.RecoBackgroundMonitoringService;
+import com.a3did.partner.recosample.RecoBackgroundRangingService;
+import com.a3did.partner.recosample.RecoMonitoringActivity;
+import com.a3did.partner.recosample.RecoMonitoringListAdapter;
+import com.a3did.partner.recosample.RecoRangingActivity;
 import com.naver.speech.clientapi.SpeechConfig;
+import com.perples.recosdk.RECOBeacon;
+import com.perples.recosdk.RECOBeaconRegion;
+import com.perples.recosdk.RECOBeaconRegionState;
+import com.perples.recosdk.RECOErrorCode;
+import com.perples.recosdk.RECOMonitoringListener;
 
 import net.daum.mf.speech.api.TextToSpeechClient;
 import net.daum.mf.speech.api.TextToSpeechListener;
 import net.daum.mf.speech.api.TextToSpeechManager;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends RecoRangingActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         AccountFragment.OnFragmentInteractionListener,
         AchievementFragment.OnFragmentInteractionListener,
@@ -50,7 +72,8 @@ public class MainActivity extends AppCompatActivity
         DefaultFragment.OnFragmentInteractionListener,
         MissedListFragment.OnFragmentInteractionListener,
         RewardFragment.OnFragmentInteractionListener,
-        SafetyFragment.OnFragmentInteractionListener, TextToSpeechListener {
+        SafetyFragment.OnFragmentInteractionListener, TextToSpeechListener
+         {
 
 
     DefaultFragment mDefaultFragment;
@@ -75,6 +98,8 @@ public class MainActivity extends AppCompatActivity
     private AudioWriterPCM writer;
     private boolean isRunning;
     public static TextToSpeechClient ttsClient;
+
+    // Intent intent;
 
     //Voice recognition Handler
     private void handleMessage(Message msg) {
@@ -174,6 +199,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         setSupportActionBar(toolbar);
 
+        //intent = new Intent(this, RecoBackgroundRangingService.class);
+        //startService(intent);
 
         //Newton talk API 연동
         TextToSpeechManager.getInstance().initializeLibrary(getApplicationContext());
@@ -205,11 +232,14 @@ public class MainActivity extends AppCompatActivity
                 .setSpeechVoice(voiceType)
                 .setListener(MainActivity.this)
                 .build();
-        ttsClient.play("파트너 앱 실행합니다.");
+        //ttsClient.play("파트너 앱 실행합니다.");
 
         //Naver API 연동
         handler = new RecognitionHandler(this);
         mNaverRecognizer = new NaverRecognizer(this, handler, CLIENT_ID, SPEECH_CONFIG);
+
+
+
 
 
 
@@ -354,8 +384,14 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         TextToSpeechManager.getInstance().finalizeLibrary();
+        //stopService(intent);
     }
+
     ////////////////////////////////////////////////////////////////
+
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -458,11 +494,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
-
-
-
     // Declare handler for handling SpeechRecognizer thread's Messages.
     static class RecognitionHandler extends Handler {
         private final WeakReference<MainActivity> mActivity;
@@ -543,4 +574,25 @@ public class MainActivity extends AppCompatActivity
         Log.i("Newton talk error", statusMessage);
     }
     ///////////////////////////////////////////////////////
+
+     public static boolean login = false;
+     @Override
+     public void didRangeBeaconsInRegion(Collection<RECOBeacon> recoBeacons, RECOBeaconRegion recoRegion) {
+         Log.i("RECORangingActivity", "didRangeBeaconsInRegion() region: " + recoRegion.getUniqueIdentifier() + ", number of beacons ranged: " + recoBeacons.size());
+         if(recoBeacons.size() != 0)
+         {
+             if(!login) {
+                 ttsClient.play("안녕하세요~ 준현씨.");
+                 login = true;
+             }
+         }
+         else
+         {
+             if(login) {
+                 ttsClient.play("안녕히가세요~ 준현씨.");
+                 login = false;
+             }
+         }
+         //Write the code when the beacons in the region is received
+     }
 }

@@ -200,12 +200,12 @@ public class MainActivity extends Activity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+     @Override
+     protected void onDestroy() {
+     super.onDestroy();
+     }
 
-    /**
+     /**
      * In order to use RECO SDK for Android API 23 (Marshmallow) or higher,
      * the location permission (ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION) is required.
      *

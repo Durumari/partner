@@ -26,6 +26,7 @@ package com.a3did.partner.recosample;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.perples.recosdk.RECOBeaconManager;
 import com.perples.recosdk.RECOBeaconRegion;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
  * RECOActivity 클래스는 RECOMonitoringActivity와 RECORangingActivity를 위한 기본 클래스 입니다.
  * Monitoring 이나 ranging을 단일 클래스로 구성하고 싶으시다면, 이 클래스를 삭제하시고 필요한 메소드와 RECOServiceConnectListener를 해당 클래스에서 구현하시기 바랍니다.
  */
-public abstract class RecoActivity extends Activity implements RECOServiceConnectListener {
+public abstract class RecoActivity extends AppCompatActivity implements RECOServiceConnectListener {
     protected RECOBeaconManager mRecoManager;
     protected ArrayList<RECOBeaconRegion> mRegions;
 

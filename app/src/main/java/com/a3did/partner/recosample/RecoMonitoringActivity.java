@@ -48,7 +48,7 @@ import java.util.Locale;
  */
 public class RecoMonitoringActivity extends RecoActivity implements RECOMonitoringListener {
     private RecoMonitoringListAdapter mMonitoringListAdapter;
-    private ListView mRegionListView;
+    //private ListView mRegionListView;
 
     /**
      * We recommend 1 second for scanning, 10 seconds interval between scanning, and 60 seconds for region expiration time.
@@ -62,7 +62,6 @@ public class RecoMonitoringActivity extends RecoActivity implements RECOMonitori
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reco_monitoring);
 
         //mRecoManager will be created here. (Refer to the RECOActivity.onCreate())
         //mRecoManager 인스턴스는 여기서 생성됩니다. RECOActivity.onCreate() 메소들르 참고하세요.
@@ -87,6 +86,7 @@ public class RecoMonitoringActivity extends RecoActivity implements RECOMonitori
          * bind후에, onServiceConnect() 콜백 메소드가 호출됩니다. 콜백 메소드 호출 이후 monitoring / ranging 작업을 수행하시기 바랍니다.
          */
         mRecoManager.bind(this);
+        Log.i("RecoMonitoringActivity", "bind");
     }
 
 
@@ -95,8 +95,8 @@ public class RecoMonitoringActivity extends RecoActivity implements RECOMonitori
         super.onResume();
 
         mMonitoringListAdapter = new RecoMonitoringListAdapter(this);
-        mRegionListView = (ListView)findViewById(R.id.list_monitoring);
-        mRegionListView.setAdapter(mMonitoringListAdapter);
+        //mRegionListView = (ListView)findViewById(R.id.list_monitoring);
+        //mRegionListView.setAdapter(mMonitoringListAdapter);
     }
 
 
@@ -215,6 +215,7 @@ public class RecoMonitoringActivity extends RecoActivity implements RECOMonitori
     public void onServiceFail(RECOErrorCode errorCode) {
         //Write the code when the RECOBeaconService is failed.
         //See the RECOErrorCode in the documents.
+        Log.i("RecoMonitoringActivity", "Remote Exception" + errorCode);
         return;
     }
 
@@ -222,6 +223,8 @@ public class RecoMonitoringActivity extends RecoActivity implements RECOMonitori
     public void monitoringDidFailForRegion(RECOBeaconRegion region, RECOErrorCode errorCode) {
         //Write the code when the RECOBeaconService is failed to monitor the region.
         //See the RECOErrorCode in the documents.
+
+        Log.i("RecoMonitoringActivity", "Remote Exception" + errorCode);
         return;
     }
 

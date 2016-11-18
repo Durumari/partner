@@ -45,12 +45,12 @@ import java.util.Collection;
 public class RecoRangingActivity extends RecoActivity implements RECORangingListener {
 
     private RecoRangingListAdapter mRangingListAdapter;
-    private ListView mRegionListView;
+    //private ListView mRegionListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reco_ranging);
+        //setContentView(R.layout.activity_reco_ranging);
 
         //mRecoManager will be created here. (Refer to the RECOActivity.onCreate())
         //mRecoManager 인스턴스는 여기서 생성됩니다. RECOActivity.onCreate() 메소들르 참고하세요.
@@ -78,8 +78,8 @@ public class RecoRangingActivity extends RecoActivity implements RECORangingList
         super.onResume();
 
         mRangingListAdapter = new RecoRangingListAdapter(this);
-        mRegionListView = (ListView)findViewById(R.id.list_ranging);
-        mRegionListView.setAdapter(mRangingListAdapter);
+        //mRegionListView = (ListView)findViewById(R.id.list_ranging);
+        //mRegionListView.setAdapter(mRangingListAdapter);
     }
 
     @Override

@@ -8,6 +8,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-feature android:required="true" android:name="android.hardware.bluetooth_le"/>
+
 
     <application
         android:allowBackup="true"
@@ -25,6 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name="com.perples.recosdk.RECOBeaconService" />
+        <service android:name="com.a3did.partner.recosample.RecoBackgroundMonitoringService" />
+        <service android:name="com.a3did.partner.recosample.RecoBackgroundRangingService"/>
     </application>
 
 </manifest>
