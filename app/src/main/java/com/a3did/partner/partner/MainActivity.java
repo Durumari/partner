@@ -132,36 +132,36 @@ public class MainActivity extends RecoRangingActivity
                     break;
                 if(mResult.contains("파트너"))
                 {
-                    ttsClient.play("네 최준현님");
+                    ttsClient.play("네 준현씨");
                 }
                 else if(mResult.contains("일정"))
                 {
-                    ttsClient.play("네 일정 탭으로 넘어갑니다.");
+                    ttsClient.play("네 일정 보여드릴게요.");
                     transitionFragment(R.id.nav_assistant);
                 }
                 else if(mResult.contains("목표"))
                 {
-                    ttsClient.play("네 목표 탭으로 넘어갑니다.");
+                    ttsClient.play("네 목표 보여드릴게요.");
                     transitionFragment(R.id.nav_achievement);
                 }
                 else if(mResult.contains("보상"))
                 {
-                    ttsClient.play("네 보상 탭으로 넘어갑니다.");
+                    ttsClient.play("네 보상 탭 보여드릴게요.");
                     transitionFragment(R.id.nav_reward);
                 }
                 else if(mResult.contains("설정"))
                 {
-                    ttsClient.play("네 설정 탭으로 넘어갑니다.");
+                    ttsClient.play("네 설정 탭 보여드릴게요.");
                     transitionFragment(R.id.nav_account);
                 }
                 else if(mResult.contains("완료"))
                 {
-                    ttsClient.play("네 완료리스트 탭으로 넘어갑니다.");
+                    ttsClient.play("네 완료리스트 보여드릴게요.");
                     transitionFragment(R.id.nav_completed_list);
                 }
                 else if(mResult.contains("실패"))
                 {
-                    ttsClient.play("네 실패리스트 탭으로 넘어갑니다.");
+                    ttsClient.play("네 실패리스트 보여드릴게요.");
                     transitionFragment(R.id.nav_missed_list);
                 }
                 break;
@@ -176,6 +176,10 @@ public class MainActivity extends RecoRangingActivity
                 //btnStart.setText(R.string.str_start);
                 //btnStart.setEnabled(true);
                 isRunning = false;
+
+                Log.d("Partner","recognitionError");
+
+
                 break;
 
             case R.id.clientInactive:
@@ -183,6 +187,7 @@ public class MainActivity extends RecoRangingActivity
                     writer.close();
                 }
 
+                Log.d("Partner","clientInactive");
                 //btnStart.setText(R.string.str_start);
                 //btnStart.setEnabled(true);
                 isRunning = false;
@@ -294,6 +299,7 @@ public class MainActivity extends RecoRangingActivity
                     // Because it means that a user wants to cancel speech
                     // recognition commonly, so call stop().
                     mNaverRecognizer.getSpeechRecognizer().stop();
+                    isRunning = false;
                 }
 
 
@@ -384,6 +390,7 @@ public class MainActivity extends RecoRangingActivity
     protected void onDestroy() {
         super.onDestroy();
         TextToSpeechManager.getInstance().finalizeLibrary();
+        login = false;
         //stopService(intent);
     }
 
@@ -521,6 +528,12 @@ public class MainActivity extends RecoRangingActivity
         final String strInacctiveText = "onFinished() SentSize : " + intSentSize + " RecvSize : " + intRecvSize;
 
         Log.i("Partner", strInacctiveText);
+        /*if (!isRunning) {
+            // Start button is pushed when SpeechRecognizer's state is inactive.
+            // Run SpeechRecongizer by calling recognize().
+            mNaverRecognizer.recognize();
+            isRunning = true;
+        }*/
         //ttsClient = null;
     }
 
@@ -582,15 +595,18 @@ public class MainActivity extends RecoRangingActivity
          if(recoBeacons.size() != 0)
          {
              if(!login) {
+                 if(!ttsClient.isPlaying())
+                     login = true;
                  ttsClient.play("안녕하세요~ 준현씨.");
-                 login = true;
              }
          }
          else
          {
              if(login) {
+                 if(!ttsClient.isPlaying())
+                     login = false;
                  ttsClient.play("안녕히가세요~ 준현씨.");
-                 login = false;
+
              }
          }
          //Write the code when the beacons in the region is received
