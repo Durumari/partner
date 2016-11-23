@@ -12,6 +12,7 @@ import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,6 +121,7 @@ public class RewardFragment extends android.support.v4.app.Fragment {
 
                         RewardListData data = (RewardListData)mListAdapter.getItem(position);
                         sendMessage("01062747927","[Partner] 준현이가 별을 모아서 "  + "'" + data.getTitle() + "'" + "을 선물로 받기를 원해요~^^" );
+                        //sendMessage("01093348599","[Partner] 준현이가 별을 모아서 "  + "'" + data.getTitle() + "'" + "을 선물로 받기를 원해요~^^" );
                         mStarNum  -= data.getStarNum();
                         mTextView.setText(mStarNum + "");
 
@@ -149,11 +151,14 @@ public class RewardFragment extends android.support.v4.app.Fragment {
                 switch (getResultCode()){
                     case Activity.RESULT_OK:
                         // 도착 완료
-                        Toast.makeText(mContext, "SMS 도착 완료", Toast.LENGTH_SHORT).show();
+                        Log.d("Partner", "도착 완료");
+                        //Toast.makeText(mContext, "SMS 도착 완료", Toast.LENGTH_SHORT).show();
                         break;
                     case Activity.RESULT_CANCELED:
+
                         // 도착 안됨
-                        Toast.makeText(mContext, "SMS 도착 실패", Toast.LENGTH_SHORT).show();
+                        Log.d("Partner", "도착 안됨");
+                        //Toast.makeText(mContext, "SMS 도착 실패", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
