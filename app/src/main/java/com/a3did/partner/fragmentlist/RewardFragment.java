@@ -1,16 +1,29 @@
 package com.a3did.partner.fragmentlist;
 
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.telephony.SmsManager;
+import android.telephony.SmsMessage;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.a3did.partner.adapterlist.AssistantListAdapter;
+import com.a3did.partner.adapterlist.RewardListAdapter;
+import com.a3did.partner.adapterlist.RewardListData;
 import com.a3did.partner.partner.R;
 
 import java.util.ArrayList;
@@ -37,9 +50,11 @@ public class RewardFragment extends android.support.v4.app.Fragment {
     private OnFragmentInteractionListener mListener;
 
     ListView mListView;
-    ArrayList<String> mDateList;
-    ArrayAdapter<String> mListAdapter;
+    ArrayList<RewardListData> mDateList;
+    RewardListAdapter mListAdapter;
     TextView mTextView;
+    public Context mContext;
+    int mStarNum = 500;
     public RewardFragment() {
         // Required empty public constructor
     }
@@ -74,20 +89,80 @@ public class RewardFragment extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_reward, container, false);
-        mDateList = new ArrayList<String>();
-        mDateList.add("Reward Item 1");
-        mDateList.add("Reward Item 2");
-        mDateList.add("Reward Item 3");
-        mDateList.add("Reward Item 4");
-        mDateList.add("Reward Item 5");
-        mDateList.add("Reward Item 6");
+
+        mTextView = (TextView)v.findViewById(R.id.star_number) ;
+        mTextView.setText(mStarNum + "");
+        mContext = v.getContext();
+        mListAdapter = new RewardListAdapter();
+
+        // 첫 번째 아이템 추가.
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_card_giftcard_black_24dp),
+                "뽀로로 컴퓨터 사기", 100) ;
+        // 두 번째 아이템 추가.
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_card_giftcard_black_24dp),
+                "놀이동산 가기", 60) ;
+        // 세 번째 아이템 추가.
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_card_giftcard_black_24dp),
+                "짜장면 먹기",  10) ;
+
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_card_giftcard_black_24dp),
+                "컴퓨터 이용 1시간 쿠폰!", 20) ;
+
         mListView = (ListView)v.findViewById(R.id.reward_list);
-        mListAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1,mDateList);
         mListView.setAdapter(mListAdapter);
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        RewardListData data = (RewardListData)mListAdapter.getItem(position);
+                        sendMessage("01062747927","[Partner] 준현이가 별을 모아서 "  + "'" + data.getTitle() + "'" + "을 선물로 받기를 원해요~^^" );
+                        mStarNum  -= data.getStarNum();
+                        mTextView.setText(mStarNum + "");
+
+                        mListAdapter.getList().remove(position);
+                        mListAdapter.notifyDataSetChanged();
+
+                return false;
+            }
+        });
         return v;
     }
+    public void sendMessage(String number, String text){
+
+        if (number.length()>0 && text.length()>0) {
+            sendSMS(number, text);
+        }
+    }
+    public void sendSMS(String smsNumber, String smsText){
+        PendingIntent sentIntent = PendingIntent.getBroadcast(mContext, 0, new Intent("SMS_SENT_ACTION"), 0);
+        PendingIntent deliveredIntent = PendingIntent.getBroadcast(mContext, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
+
+
+
+        mContext.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch (getResultCode()){
+                    case Activity.RESULT_OK:
+                        // 도착 완료
+                        Toast.makeText(mContext, "SMS 도착 완료", Toast.LENGTH_SHORT).show();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        // 도착 안됨
+                        Toast.makeText(mContext, "SMS 도착 실패", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        }, new IntentFilter("SMS_DELIVERED_ACTION"));
+
+        SmsManager mSmsManager = SmsManager.getDefault();
+        mSmsManager.sendTextMessage(smsNumber, null, smsText, sentIntent, deliveredIntent);
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

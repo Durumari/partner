@@ -605,7 +605,7 @@ public class MainActivity extends RecoRangingActivity
              if(login) {
                  if(!ttsClient.isPlaying())
                      login = false;
-                 ttsClient.play("안녕히가세요~ 준현씨.");
+                 ttsClient.play("안녕히가세요.");
 
              }
          }
