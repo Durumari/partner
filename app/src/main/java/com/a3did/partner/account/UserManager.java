@@ -105,11 +105,13 @@ public class UserManager {
         AchievementListData achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
                 "수학 시험 100점 맞기", 10, "11월 19일 오후 3시", "12월 20일 오후 3시");
+        achievementlistData.addGuide("선생님이 내주신 숙제만 잘하면 되요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
                 "집 어지럽히지 않고 5일 유지하기", 5, "11월 19일 오후 4시", "11월 24일 오후 4시");
+        achievementlistData.addGuide("쓰고난 물건은 제자리에 두세요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         achievementlistData = new AchievementListData();
@@ -120,11 +122,13 @@ public class UserManager {
         achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
                 "운동 주 5회 하기", 2, "11월 19일 오후 9시", "11월 26일 오후 9시");
+        achievementlistData.addGuide("강아지랑 공원으로 나갔다 오세요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
                 "강아지 목욕시켜주기", 1, "11월 20일 오후 8시", "11월 20일 오후 9시");
+        achievementlistData.addGuide("따뜻한 물을 미리 받아 놓아요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         //reward
