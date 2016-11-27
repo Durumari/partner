@@ -29,6 +29,15 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_menu_add" />
 
+    <Button
+        android:text="Connect"
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_menu_add"
+        />
     <include layout="@layout/content_main" />
 
 </android.support.design.widget.CoordinatorLayout>

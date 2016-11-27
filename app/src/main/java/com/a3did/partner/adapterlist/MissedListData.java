@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 public class MissedListData {
     private Drawable iconDrawable ;
     private String titleStr ;
-    private String dateStr ;
+    //private String dateStr ;
 
     public void setIcon(Drawable icon) {
         iconDrawable = icon ;
@@ -16,9 +16,9 @@ public class MissedListData {
     public void setTitle(String title) {
         titleStr = title ;
     }
-    public void setDate(String desc) {
-        dateStr = desc ;
-    }
+//   // public void setDate(String desc) {
+//        dateStr = desc ;
+//    }
 
     public Drawable getIcon() {
         return this.iconDrawable ;
@@ -26,7 +26,7 @@ public class MissedListData {
     public String getTitle() {
         return this.titleStr ;
     }
-    public String getDate() {
-        return this.dateStr ;
-    }
+   // public String getDate() {
+//        return this.dateStr ;
+//    }
 }
