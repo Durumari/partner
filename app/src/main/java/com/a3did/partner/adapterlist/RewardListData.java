@@ -11,6 +11,11 @@ public class RewardListData {
     private String titleStr ;
     private int starNum;
 
+    public void setItem(Drawable icon, String title, int starnum){
+        iconDrawable = icon;
+        titleStr = title;
+        starNum = starnum;
+    }
     public void setIcon(Drawable icon) {
         iconDrawable = icon ;
     }

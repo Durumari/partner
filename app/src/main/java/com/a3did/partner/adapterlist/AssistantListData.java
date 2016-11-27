@@ -11,6 +11,12 @@ public class AssistantListData {
     private String titleStr ;
     private String dateStr ;
 
+    public void setItem(Drawable icon, String title, String date){
+        iconDrawable = icon;
+        titleStr = title;
+        dateStr = date;
+    }
+
     public void setIcon(Drawable icon) {
         iconDrawable = icon ;
     }

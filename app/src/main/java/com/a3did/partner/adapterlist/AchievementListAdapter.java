@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.a3did.partner.account.PartnerUserInfo;
 import com.a3did.partner.partner.R;
 
 import java.util.ArrayList;
@@ -24,7 +25,9 @@ public class AchievementListAdapter extends BaseAdapter {
     public AchievementListAdapter() {
 
     }
-
+    public void setList(ArrayList<AchievementListData> list){
+        listViewItemList = list;
+    }
     // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
     @Override
     public int getCount() {

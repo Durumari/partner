@@ -19,7 +19,9 @@ import java.util.ArrayList;
 public class RewardListAdapter extends BaseAdapter {
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
     private ArrayList<RewardListData> listViewItemList = new ArrayList<RewardListData>() ;
-
+    public void setList(ArrayList<RewardListData> list){
+        listViewItemList = list;
+    }
     // ListViewAdapter의 생성자
     public RewardListAdapter() {
 

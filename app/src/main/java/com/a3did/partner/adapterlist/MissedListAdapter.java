@@ -20,7 +20,9 @@ public class MissedListAdapter  extends BaseAdapter{
 
 
     private ArrayList<MissedListData> listViewItemList = new ArrayList<>();
-
+    public void setList(ArrayList<MissedListData> list){
+        listViewItemList = list;
+    }
     public MissedListAdapter(){
 
     }

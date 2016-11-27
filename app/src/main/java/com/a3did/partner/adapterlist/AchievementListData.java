@@ -13,6 +13,14 @@ public class AchievementListData {
     private String toStr ;
     private int starNumber;
 
+    public void setItem(Drawable icon, String title, int num, String from, String to){
+        iconDrawable = icon ;
+        titleStr = title ;
+        fromStr = from ;
+        toStr = to ;
+        starNumber = num ;
+    }
+
     public void setIcon(Drawable icon) {
         iconDrawable = icon ;
     }

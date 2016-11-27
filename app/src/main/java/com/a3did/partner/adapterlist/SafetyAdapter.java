@@ -22,6 +22,11 @@ public class SafetyAdapter extends BaseAdapter{
     public SafetyAdapter(){
 
     }
+
+    public void setList(ArrayList<SafetyData> list){
+        listViewItemList = list;
+    }
+
     @Override
     public int getCount() {
         return listViewItemList.size();

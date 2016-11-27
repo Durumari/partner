@@ -19,6 +19,11 @@ import java.util.ArrayList;
 public class CompletedListAdapter extends BaseAdapter{
 
     private ArrayList<CompletedListData> listViewItemList = new ArrayList<CompletedListData>();
+
+    public void setList(ArrayList<CompletedListData> list){
+        listViewItemList = list;
+    }
+
     @Override
     public int getCount() {
         return listViewItemList.size();

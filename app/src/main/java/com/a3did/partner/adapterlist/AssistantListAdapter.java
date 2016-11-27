@@ -25,6 +25,9 @@ public class AssistantListAdapter extends BaseAdapter {
 
     }
 
+    public void setList(ArrayList<AssistantListData> list){
+        listViewItemList = list;
+    }
     // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
     @Override
     public int getCount() {
