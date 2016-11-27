@@ -109,6 +109,9 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
                                     long arg3) {
                 //String value = (String) adapter.getItemAtPosition(position);
                 Log.d("TEST", "list is pressed");
+
+                //map 에 제공할 long, lat 정보를 google api에 맞춰서 view에 보내주면 될듯
+                //번거로우면 너가 찾아보는거로 해도된다
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 View view = inflater.inflate(R.layout.fragment_gpsmap, null);
