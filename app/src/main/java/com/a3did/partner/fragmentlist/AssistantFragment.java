@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.a3did.partner.account.PartnerUserInfo;
+import com.a3did.partner.account.UserManager;
 import com.a3did.partner.adapterlist.AssistantListAdapter;
 import com.a3did.partner.adapterlist.AssistantListData;
 import com.a3did.partner.partner.R;
@@ -92,23 +94,11 @@ public class AssistantFragment extends android.support.v4.app.Fragment {
         mListView.setAdapter(mListAdapter);*/
 
         mListAdapter = new AssistantListAdapter();
-        // 첫 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
-                "방 청소하기", "11월 19일 오후 3시") ;
-        // 두 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_assignment_black_24dp),
-                "수학 숙제하기", "11월 19일 오후 4시") ;
-        // 세 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
-                "강아지 먹이주기", "11월 19일 오후 5시") ;
-
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_bookmark_border_black_24dp),
-                "미술학원 가기", "11월 19일 오후 6시") ;
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_assignment_black_24dp),
-                "인터넷 강의 보기", "11월 19일 오후 8시") ;
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
-                "자기 전에 영양제먹기", "11월 19일 오후 9시") ;
-
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        if(userInfo != null){
+            mListAdapter.setList(userInfo.mScheduleInfoList);
+        }
         mListView = (ListView)v.findViewById(R.id.schedule_list);
         mListView.setAdapter(mListAdapter);
         return v;

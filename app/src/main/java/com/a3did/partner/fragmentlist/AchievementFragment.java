@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.a3did.partner.account.PartnerUserInfo;
+import com.a3did.partner.account.UserManager;
 import com.a3did.partner.adapterlist.AchievementListAdapter;
 import com.a3did.partner.partner.R;
 
@@ -76,28 +78,14 @@ public class AchievementFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_achievement, container, false);
-        /*mDateList = new ArrayList<String>();
-        mDateList.add("Goal 1");
-        mDateList.add("Goal 2");
-        mDateList.add("Goal 3");
-        mDateList.add("Goal 4");
-        mDateList.add("Goal 5");
-        mListView = (ListView)v.findViewById(R.id.goal_list);
-        mListAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1,mDateList);
-        mListView.setAdapter(mListAdapter);*/
 
         mListAdapter = new AchievementListAdapter();
 
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_bookmark_border_black_24dp),
-                "수학 시험 100점 맞기", 10, "11월 19일 오후 3시", "12월 20일 오후 3시");
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_bookmark_border_black_24dp),
-                "집 어지럽히지 않고 5일 유지하기", 5, "11월 19일 오후 4시", "11월 24일 오후 4시");
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_bookmark_border_black_24dp),
-                "두시간 집중해서 독서하기", 1, "11월 19일 오후 5시", "11월 29일 오후 7시");
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_bookmark_border_black_24dp),
-                "운동 주 5회 하기", 2, "11월 19일 오후 9시", "11월 26일 오후 9시");
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_bookmark_border_black_24dp),
-                "강아지 목욕시켜주기", 1, "11월 20일 오후 8시", "11월 20일 오후 9시");
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        if(userInfo != null){
+            mListAdapter.setList(userInfo.mAchievementInfoList);
+        }
 
         mListView = (ListView)v.findViewById(R.id.goal_list);
         mListView.setAdapter(mListAdapter);

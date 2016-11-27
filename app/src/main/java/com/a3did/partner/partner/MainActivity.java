@@ -30,6 +30,7 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.a3did.partner.account.UserManager;
 import com.a3did.partner.fragmentlist.AccountFragment;
 import com.a3did.partner.fragmentlist.AchievementFragment;
 import com.a3did.partner.fragmentlist.AssistantFragment;
@@ -73,7 +74,7 @@ public class MainActivity extends RecoRangingActivity
         MissedListFragment.OnFragmentInteractionListener,
         RewardFragment.OnFragmentInteractionListener,
         SafetyFragment.OnFragmentInteractionListener, TextToSpeechListener
-         {
+{
 
 
     DefaultFragment mDefaultFragment;
@@ -98,6 +99,8 @@ public class MainActivity extends RecoRangingActivity
     private AudioWriterPCM writer;
     private boolean isRunning;
     public static TextToSpeechClient ttsClient;
+
+    public UserManager mUserManager;
 
     // Intent intent;
 
@@ -203,6 +206,16 @@ public class MainActivity extends RecoRangingActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar(toolbar);
+
+
+        //User Management Instance
+        mUserManager = mUserManager.getInstance();
+        mUserManager.setContext(this);
+        //기본 정보 기입
+        mUserManager.generateInformation();
+        mUserManager.setCurrentUserInfo(0);
+
+
 
         //intent = new Intent(this, RecoBackgroundRangingService.class);
         //startService(intent);
@@ -592,8 +605,11 @@ public class MainActivity extends RecoRangingActivity
      @Override
      public void didRangeBeaconsInRegion(Collection<RECOBeacon> recoBeacons, RECOBeaconRegion recoRegion) {
          Log.i("RECORangingActivity", "didRangeBeaconsInRegion() region: " + recoRegion.getUniqueIdentifier() + ", number of beacons ranged: " + recoBeacons.size());
+
          if(recoBeacons.size() != 0)
          {
+             RECOBeacon beco = recoBeacons.iterator().next();
+             Log.d("test", beco.getProximityUuid());
              if(!login) {
                  if(!ttsClient.isPlaying())
                      login = true;

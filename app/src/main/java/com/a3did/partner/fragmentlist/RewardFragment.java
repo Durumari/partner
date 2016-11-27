@@ -22,6 +22,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.a3did.partner.account.PartnerUserInfo;
+import com.a3did.partner.account.UserManager;
 import com.a3did.partner.adapterlist.AssistantListAdapter;
 import com.a3did.partner.adapterlist.RewardListAdapter;
 import com.a3did.partner.adapterlist.RewardListData;
@@ -95,22 +97,15 @@ public class RewardFragment extends android.support.v4.app.Fragment {
         View v = inflater.inflate(R.layout.fragment_reward, container, false);
 
         mTextView = (TextView)v.findViewById(R.id.star_number) ;
-        mTextView.setText(mStarNum + "");
         mContext = v.getContext();
         mListAdapter = new RewardListAdapter();
 
-        // 첫 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_card_giftcard_black_24dp),
-                "뽀로로 컴퓨터 사기", 100) ;
-        // 두 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_card_giftcard_black_24dp),
-                "놀이동산 가기", 60) ;
-        // 세 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_card_giftcard_black_24dp),
-                "짜장면 먹기",  10) ;
-
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_card_giftcard_black_24dp),
-                "컴퓨터 이용 1시간 쿠폰!", 20) ;
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        if(userInfo != null){
+            mListAdapter.setList(userInfo.mRewardInfoList);
+        }
+        mTextView.setText(userInfo.mStarNumber + "");
 
         mListView = (ListView)v.findViewById(R.id.reward_list);
         mListView.setAdapter(mListAdapter);
@@ -120,10 +115,15 @@ public class RewardFragment extends android.support.v4.app.Fragment {
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                         RewardListData data = (RewardListData)mListAdapter.getItem(position);
-                        sendMessage("01062747927","[Partner] 준현이가 별을 모아서 "  + "'" + data.getTitle() + "'" + "을 선물로 받기를 원해요~^^" );
+                        UserManager userManager = UserManager.getInstance();
+                        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+                        if(userInfo != null){
+                            mListAdapter.setList(userInfo.mRewardInfoList);
+                        }
+                        sendMessage(userInfo.mParentPhoneNumber,"[Partner] 준현이가 별을 모아서 "  + "'" + data.getTitle() + "'" + "을 선물로 받기를 원해요~^^" );
                         //sendMessage("01093348599","[Partner] 준현이가 별을 모아서 "  + "'" + data.getTitle() + "'" + "을 선물로 받기를 원해요~^^" );
-                        mStarNum  -= data.getStarNum();
-                        mTextView.setText(mStarNum + "");
+                        userInfo.mStarNumber  -= data.getStarNum();
+                        mTextView.setText(userInfo.mStarNumber + "");
 
                         mListAdapter.getList().remove(position);
                         mListAdapter.notifyDataSetChanged();

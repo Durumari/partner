@@ -19,12 +19,12 @@ public class MyLocListener implements LocationListener {
 //    MyLocListener(){
 //
 //    }
-    TextView t;
+    //TextView t;
     @Override
     public void onLocationChanged(Location location)
     {
 
-        t = (TextView) t.findViewById(R.id.textView_coordinate);
+        //t = (TextView) t.findViewById(R.id.textView_coordinate);
 
         if(location != null)
         {
@@ -34,7 +34,7 @@ public class MyLocListener implements LocationListener {
             Log.e("TEST", "ERROR: no gps location ");
 
         }
-        t.append(" " + location.getLongitude()+ " " +location.getLatitude());
+        //t.append(" " + location.getLongitude()+ " " +location.getLatitude());
     }
 
     @Override
