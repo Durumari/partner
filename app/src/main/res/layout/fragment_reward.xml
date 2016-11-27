@@ -10,16 +10,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <!-- TODO: Update blank fragment layout -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reward List" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
+                android:layout_gravity="center_vertical"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@android:drawable/btn_star_big_on"/>
