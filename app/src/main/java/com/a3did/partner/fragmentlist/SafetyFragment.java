@@ -1,5 +1,6 @@
 package com.a3did.partner.fragmentlist;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.widget.ListView;
 
 import com.a3did.partner.adapterlist.SafetyAdapter;
 import com.a3did.partner.partner.R;
+import com.a3did.partner.registration.SafetyDialogFragment;
+import com.a3did.partner.registration.SafetyViewerDialogFragment;
 
 import java.util.ArrayList;
 
@@ -106,20 +109,17 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
                                     long arg3) {
                 //String value = (String) adapter.getItemAtPosition(position);
                 Log.d("TEST", "list is pressed");
-                // assuming string and if you want to get the value on click of list item
-                // do what you intend to do on click of listview row
-//                FragmentManager fm = getFragmentManager();
-//                FragmentBoxOffice f = (FragmentBoxOffice) fm.findFragmentByTag(FragmentBoxOffice.TAG);
-//                if (f == null) {
-//                    f = new FragmentBoxOffice();
-//                    fm.beginTransaction()
-//                            .replace(R.id.map, f, FragmentBoxOffice.TAG)
-//                                    //.addToBackStack(null);  // uncomment this line if you want to be able to return to the prev. fragment with "back" button
-//                            .commit();
-//                }
-//                MapFragment mapFragment;
-//                mapFragment =  (MapFragment)getFragmentManager().findFragmentById(R.id.map);
-//                mapFragment.getMapAsync(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View view = inflater.inflate(R.layout.fragment_gpsmap, null);
+                builder.setTitle("Dangerous Area");
+                builder.setView(view)
+                        .setPositiveButton("확인",null);
+
+                builder.show();
+
+
+
             }
         });
 
