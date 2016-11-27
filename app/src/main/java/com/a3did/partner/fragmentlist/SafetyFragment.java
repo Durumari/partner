@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 
 import com.a3did.partner.adapterlist.SafetyAdapter;
 import com.a3did.partner.partner.R;
+import com.google.android.gms.maps.MapFragment;
 
 import java.util.ArrayList;
 
@@ -107,6 +109,18 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
                 Log.d("TEST", "list is pressed");
                 // assuming string and if you want to get the value on click of list item
                 // do what you intend to do on click of listview row
+//                FragmentManager fm = getFragmentManager();
+//                FragmentBoxOffice f = (FragmentBoxOffice) fm.findFragmentByTag(FragmentBoxOffice.TAG);
+//                if (f == null) {
+//                    f = new FragmentBoxOffice();
+//                    fm.beginTransaction()
+//                            .replace(R.id.map, f, FragmentBoxOffice.TAG)
+//                                    //.addToBackStack(null);  // uncomment this line if you want to be able to return to the prev. fragment with "back" button
+//                            .commit();
+//                }
+//                MapFragment mapFragment;
+//                mapFragment =  (MapFragment)getFragmentManager().findFragmentById(R.id.map);
+//                mapFragment.getMapAsync(this);
             }
         });
 

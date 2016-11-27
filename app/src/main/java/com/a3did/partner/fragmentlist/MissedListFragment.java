@@ -92,21 +92,21 @@ public class MissedListFragment extends android.support.v4.app.Fragment {
         mListAdapter = new MissedListAdapter();
 
         // 첫 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
-                "방 청소하기", "11월 19일 오후 3시") ;
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_goal_black_24dp),
+                "방 청소하기") ;
         // 두 번째 아이템 추가.
         mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_assignment_black_24dp),
-                "수학 숙제하기", "11월 19일 오후 4시") ;
+                "수학 숙제하기") ;
         // 세 번째 아이템 추가.
         mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
-                "강아지 먹이주기", "11월 19일 오후 5시") ;
+                "강아지 먹이주기") ;
 
         mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_bookmark_border_black_24dp),
-                "미술학원 가기", "11월 19일 오후 6시") ;
+                "미술학원 가기") ;
         mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_assignment_black_24dp),
-                "인터넷 강의 보기", "11월 19일 오후 8시") ;
+                "인터넷 강의 보기") ;
         mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
-                "자기 전에 영양제먹기", "11월 19일 오후 9시") ;
+                "자기 전에 영양제먹기") ;
 
         mListView = (ListView)v.findViewById(R.id.missed_list);
         mListView.setAdapter(mListAdapter);
