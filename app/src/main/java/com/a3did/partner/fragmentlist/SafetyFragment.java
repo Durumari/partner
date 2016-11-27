@@ -16,7 +16,6 @@ import android.widget.ListView;
 
 import com.a3did.partner.adapterlist.SafetyAdapter;
 import com.a3did.partner.partner.R;
-import com.google.android.gms.maps.MapFragment;
 
 import java.util.ArrayList;
 

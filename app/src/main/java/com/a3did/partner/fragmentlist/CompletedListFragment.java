@@ -13,6 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.a3did.partner.account.PartnerUserInfo;
+import com.a3did.partner.account.UserManager;
 import com.a3did.partner.adapterlist.CompletedListAdapter;
 import com.a3did.partner.partner.R;
 
@@ -94,18 +96,11 @@ public class CompletedListFragment extends android.support.v4.app.Fragment {
 
 
         mListAdapter = new CompletedListAdapter();
-        // 첫 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_goal_black_24dp),
-                "문제집 다 풀기") ;
-        // 두 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_date_range_black_24dp),
-                "수학 숙제하기") ;
-        // 세 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_date_range_black_24dp),
-                "강아지 먹이주기") ;
-
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_goal_black_24dp),
-                "이번주 설거지 3번하기") ;
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        if(userInfo != null){
+            mListAdapter.setList(userInfo.mCompletedInfoList);
+        }
 
         mListView = (ListView)v.findViewById(R.id.completed_list);
         mListView.setAdapter(mListAdapter);

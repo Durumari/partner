@@ -10,6 +10,11 @@ public class SafetyData {
     private String titleStr ;
     private String dateStr ;
 
+    public void setItem(Drawable icon, String title, String desc){
+        iconDrawable = icon;
+        titleStr = title;
+        dateStr = desc ;
+    }
     public void setIcon(Drawable icon) {
         iconDrawable = icon ;
     }

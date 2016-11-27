@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.a3did.partner.account.PartnerUserInfo;
+import com.a3did.partner.account.UserManager;
 import com.a3did.partner.adapterlist.MissedListAdapter;
 import com.a3did.partner.adapterlist.MissedListData;
 import com.a3did.partner.partner.R;
@@ -78,35 +80,16 @@ public class MissedListFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_missed_list, container, false);
-/*        mDateList = new ArrayList<String>();
-        mDateList.add("Missed Item 1");
-        mDateList.add("Missed Item 2");
-        mDateList.add("Missed Item 3");
-        mDateList.add("Missed Item 4");
-        mDateList.add("Missed Item 5");
-        mDateList.add("Missed Item 6");
-        mListView = (ListView)v.findViewById(R.id.missed_list);
-        mListAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1,mDateList);
-        mListView.setAdapter(mListAdapter);*/
+
 
         mListAdapter = new MissedListAdapter();
 
-        // 첫 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_goal_black_24dp),
-                "방 청소하기") ;
-        // 두 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_assignment_black_24dp),
-                "수학 숙제하기") ;
-        // 세 번째 아이템 추가.
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
-                "강아지 먹이주기") ;
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        if(userInfo != null){
+            mListAdapter.setList(userInfo.mMissedInfoList);
+        }
 
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_bookmark_border_black_24dp),
-                "미술학원 가기") ;
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_assignment_black_24dp),
-                "인터넷 강의 보기") ;
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
-                "자기 전에 영양제먹기") ;
 
         mListView = (ListView)v.findViewById(R.id.missed_list);
         mListView.setAdapter(mListAdapter);

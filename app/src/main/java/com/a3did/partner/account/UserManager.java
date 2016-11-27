@@ -6,6 +6,8 @@ import android.support.v4.content.ContextCompat;
 
 import com.a3did.partner.adapterlist.AchievementListData;
 import com.a3did.partner.adapterlist.AssistantListData;
+import com.a3did.partner.adapterlist.CompletedListData;
+import com.a3did.partner.adapterlist.MissedListData;
 import com.a3did.partner.adapterlist.RewardListData;
 import com.a3did.partner.partner.R;
 
@@ -152,8 +154,49 @@ public class UserManager {
         //safety
 
         //completed
+        CompletedListData completedListData = new CompletedListData();
+        completedListData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_goal_black_24dp),
+                "문제집 다 풀기") ;
+        userInfo.mCompletedInfoList.add(completedListData);
+        // 두 번째 아이템 추가.
+        completedListData = new CompletedListData();
+        completedListData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_date_range_black_24dp),
+                "수학 숙제하기") ;
+        userInfo.mCompletedInfoList.add(completedListData);
+        // 세 번째 아이템 추가.
+        completedListData = new CompletedListData();
+        completedListData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_date_range_black_24dp),
+                "강아지 먹이주기") ;
+        userInfo.mCompletedInfoList.add(completedListData);
+
+        completedListData = new CompletedListData();
+        completedListData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_goal_black_24dp),
+                "이번주 설거지 3번하기") ;
+        userInfo.mCompletedInfoList.add(completedListData);
 
         //missed
+        MissedListData missedListData = new MissedListData();
+        missedListData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_goal_black_24dp),
+                "방 청소하기");
+        userInfo.mMissedInfoList.add(missedListData);
+
+        missedListData = new MissedListData();
+        missedListData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_goal_black_24dp),
+                "아침 일찍 일어나기") ;
+        userInfo.mMissedInfoList.add(missedListData);
+
+        missedListData = new MissedListData();
+        missedListData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_date_range_black_24dp),
+                "수학 숙제하기") ;
+        userInfo.mMissedInfoList.add(missedListData);
+
+        missedListData = new MissedListData();
+        missedListData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_date_range_black_24dp),
+                "태권도 학원가기") ;
+        userInfo.mMissedInfoList.add(missedListData);
+
+
+
 
         mUserInfoList.add(userInfo);
 

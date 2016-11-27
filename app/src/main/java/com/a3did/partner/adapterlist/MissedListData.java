@@ -10,6 +10,10 @@ public class MissedListData {
     private String titleStr ;
     //private String dateStr ;
 
+    public void setItem(Drawable icon, String title){
+        iconDrawable = icon;
+        titleStr = title;
+    }
     public void setIcon(Drawable icon) {
         iconDrawable = icon ;
     }
