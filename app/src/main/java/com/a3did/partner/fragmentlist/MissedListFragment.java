@@ -4,12 +4,15 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.a3did.partner.adapterlist.MissedListAdapter;
+import com.a3did.partner.adapterlist.MissedListData;
 import com.a3did.partner.partner.R;
 
 import java.util.ArrayList;
@@ -37,7 +40,7 @@ public class MissedListFragment extends android.support.v4.app.Fragment {
 
     ListView mListView;
     ArrayList<String> mDateList;
-    ArrayAdapter<String> mListAdapter;
+    MissedListAdapter mListAdapter;
 
     public MissedListFragment() {
         // Required empty public constructor
@@ -75,7 +78,7 @@ public class MissedListFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_missed_list, container, false);
-        mDateList = new ArrayList<String>();
+/*        mDateList = new ArrayList<String>();
         mDateList.add("Missed Item 1");
         mDateList.add("Missed Item 2");
         mDateList.add("Missed Item 3");
@@ -84,7 +87,30 @@ public class MissedListFragment extends android.support.v4.app.Fragment {
         mDateList.add("Missed Item 6");
         mListView = (ListView)v.findViewById(R.id.missed_list);
         mListAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1,mDateList);
+        mListView.setAdapter(mListAdapter);*/
+
+        mListAdapter = new MissedListAdapter();
+
+        // 첫 번째 아이템 추가.
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
+                "방 청소하기", "11월 19일 오후 3시") ;
+        // 두 번째 아이템 추가.
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_assignment_black_24dp),
+                "수학 숙제하기", "11월 19일 오후 4시") ;
+        // 세 번째 아이템 추가.
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
+                "강아지 먹이주기", "11월 19일 오후 5시") ;
+
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_bookmark_border_black_24dp),
+                "미술학원 가기", "11월 19일 오후 6시") ;
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_assignment_black_24dp),
+                "인터넷 강의 보기", "11월 19일 오후 8시") ;
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
+                "자기 전에 영양제먹기", "11월 19일 오후 9시") ;
+
+        mListView = (ListView)v.findViewById(R.id.missed_list);
         mListView.setAdapter(mListAdapter);
+
         return v;
     }
 

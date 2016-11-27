@@ -4,12 +4,16 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.a3did.partner.adapterlist.SafetyAdapter;
 import com.a3did.partner.partner.R;
 
 import java.util.ArrayList;
@@ -37,7 +41,8 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
 
     ListView mListView;
     ArrayList<String> mDateList;
-    ArrayAdapter<String> mListAdapter;
+    //ArrayAdapter<String> mListAdapter;
+    SafetyAdapter mListAdapter;
 
     public SafetyFragment() {
         // Required empty public constructor
@@ -68,6 +73,7 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -75,7 +81,7 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_safety, container, false);
-        mDateList = new ArrayList<String>();
+/*        mDateList = new ArrayList<String>();
         mDateList.add("Dangerous Area 1");
         mDateList.add("Dangerous Area 2");
         mDateList.add("Dangerous Area 3");
@@ -84,7 +90,26 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
         mDateList.add("Dangerous Area 6");
         mListView = (ListView)v.findViewById(R.id.dangerous_area_list);
         mListAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1,mDateList);
+        mListView.setAdapter(mListAdapter);*/
+        mListAdapter = new SafetyAdapter();
+
+        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
+                "자기 전에 영양제먹기", "11월 19일 오후 9시") ;
+        mListView = (ListView)v.findViewById(R.id.dangerous_area_list);
         mListView.setAdapter(mListAdapter);
+
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                    long arg3) {
+                //String value = (String) adapter.getItemAtPosition(position);
+                Log.d("TEST", "list is pressed");
+                // assuming string and if you want to get the value on click of list item
+                // do what you intend to do on click of listview row
+            }
+        });
+
         return v;
     }
 
@@ -93,6 +118,7 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+
     }
 
     @Override
@@ -126,4 +152,7 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+
 }
