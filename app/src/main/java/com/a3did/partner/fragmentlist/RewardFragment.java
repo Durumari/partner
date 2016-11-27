@@ -14,11 +14,13 @@ import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -114,25 +116,66 @@ public class RewardFragment extends android.support.v4.app.Fragment {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        RewardListData data = (RewardListData)mListAdapter.getItem(position);
-                        UserManager userManager = UserManager.getInstance();
-                        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
-                        if(userInfo != null){
-                            mListAdapter.setList(userInfo.mRewardInfoList);
+
+
+                return false;
+            }
+        });
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                PopupMenu popup= new PopupMenu(getContext(), view);//view는 오래 눌러진 뷰를 의미
+                popup.getMenuInflater().inflate(R.menu.menu_reward, popup.getMenu());
+                //Popup menu의 메뉴아이템을 눌렀을  때 보여질 ListView 항목의 위치
+                //Listener 안에서 사용해야 하기에 final로 선언
+                final int index= position;
+                //Popup Menu의 MenuItem을 클릭하는 것을 감지하는 listener 설정
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        // TODO Auto-generated method stub
+
+
+                        switch( item.getItemId() ){
+                            case R.id.request:
+                                requestReward(index);
+                                break;
+                            case R.id.delete:
+                                deleteReward(index);
+                                break;
                         }
-                        sendMessage(userInfo.mParentPhoneNumber,"[Partner] 준현이가 별을 모아서 "  + "'" + data.getTitle() + "'" + "을 선물로 받기를 원해요~^^" );
-                        //sendMessage("01093348599","[Partner] 준현이가 별을 모아서 "  + "'" + data.getTitle() + "'" + "을 선물로 받기를 원해요~^^" );
-                        userInfo.mStarNumber  -= data.getStarNum();
-                        mTextView.setText(userInfo.mStarNumber + "");
+                        return false;
+                    }
+                });
 
-                        mListAdapter.getList().remove(position);
-                        mListAdapter.notifyDataSetChanged();
-
+                popup.show();//Popup Menu 보이기
                 return false;
             }
         });
         return v;
     }
+
+    public void requestReward(int index){
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        RewardListData data = userInfo.mRewardInfoList.get(index);
+
+        sendMessage(userInfo.mParentPhoneNumber,"[Partner] " + userInfo.mName +"님이 별을 모아서 "  + "'" + data.getTitle() + "'" + "을 선물로 받기를 원해요~^^" );
+        //sendMessage("01093348599","[Partner] 준현이가 별을 모아서 "  + "'" + data.getTitle() + "'" + "을 선물로 받기를 원해요~^^" );
+        userInfo.mStarNumber  -= data.getStarNum();
+        mTextView.setText(userInfo.mStarNumber + "");
+        userInfo.mRewardInfoList.remove(index);
+        mListAdapter.notifyDataSetChanged();
+    }
+
+    public void deleteReward(int index){
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        userInfo.mRewardInfoList.remove(index);
+        mListAdapter.notifyDataSetChanged();
+    }
+
     public void sendMessage(String number, String text){
 
         if (number.length()>0 && text.length()>0) {

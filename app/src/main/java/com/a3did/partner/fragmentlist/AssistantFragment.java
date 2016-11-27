@@ -5,16 +5,23 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 
 import com.a3did.partner.account.PartnerUserInfo;
 import com.a3did.partner.account.UserManager;
 import com.a3did.partner.adapterlist.AssistantListAdapter;
 import com.a3did.partner.adapterlist.AssistantListData;
+import com.a3did.partner.adapterlist.CompletedListData;
+import com.a3did.partner.adapterlist.MissedListData;
+import com.a3did.partner.partner.MainActivity;
 import com.a3did.partner.partner.R;
 
 import java.util.ArrayList;
@@ -42,10 +49,12 @@ public class AssistantFragment extends android.support.v4.app.Fragment {
 
     ListView mListView;
     AssistantListAdapter mListAdapter;
+    Context mContext;
     //ArrayAdapter<String> mListAdapter;
 
     public AssistantFragment() {
         // Required empty public constructor
+        mContext = null;
     }
 
     /**
@@ -81,18 +90,6 @@ public class AssistantFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_assistant, container, false);
 
-        /*mDateList = new ArrayList<String>();
-        mDateList.add("Schedule Item 1");
-        mDateList.add("Schedule Item 2");
-        mDateList.add("Schedule Item 3");
-        mDateList.add("Schedule Item 4");
-        mDateList.add("Schedule Item 5");
-        mDateList.add("Schedule Item 6");
-        mDateList.add("Schedule Item 7");
-        mListView = (ListView)v.findViewById(R.id.schedule_list);
-        mListAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1,mDateList);
-        mListView.setAdapter(mListAdapter);*/
-
         mListAdapter = new AssistantListAdapter();
         UserManager userManager = UserManager.getInstance();
         PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
@@ -101,10 +98,70 @@ public class AssistantFragment extends android.support.v4.app.Fragment {
         }
         mListView = (ListView)v.findViewById(R.id.schedule_list);
         mListView.setAdapter(mListAdapter);
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                PopupMenu popup= new PopupMenu(getContext(), view);//view는 오래 눌러진 뷰를 의미
+                popup.getMenuInflater().inflate(R.menu.menu_assistant, popup.getMenu());
+                //Popup menu의 메뉴아이템을 눌렀을  때 보여질 ListView 항목의 위치
+                //Listener 안에서 사용해야 하기에 final로 선언
+                final int index= position;
+                //Popup Menu의 MenuItem을 클릭하는 것을 감지하는 listener 설정
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+
+
+                        // TODO Auto-generated method stub
+                        switch( item.getItemId() ){
+                            case R.id.Checked:
+                                moveDataToCompletedList(index);
+                                break;
+                            case R.id.delete:
+                                moveDataToMissedList(index);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
+                popup.show();//Popup Menu 보이기
+                return false;
+            }
+        });
         return v;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    public void moveDataToCompletedList(int index){
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        if(userInfo != null){
+            //리스트 정보를 옮긴다.
+            AssistantListData data = userInfo.mScheduleInfoList.get(index);
+            CompletedListData cData = new CompletedListData();
+            cData.setItem(ContextCompat.getDrawable(getContext(), R.drawable.ic_date_range_black_24dp), data.getTitle());
+            userInfo.mCompletedInfoList.add(cData);
+            userInfo.mScheduleInfoList.remove(index);
+            mListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void moveDataToMissedList(int index){
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        if(userInfo != null){
+            //리스트 정보를 옮긴다.
+            AssistantListData data = userInfo.mScheduleInfoList.get(index);
+            MissedListData cData = new MissedListData();
+            cData.setItem(ContextCompat.getDrawable(getContext(), R.drawable.ic_date_range_black_24dp), data.getTitle());
+            userInfo.mMissedInfoList.add(cData);
+            userInfo.mScheduleInfoList.remove(index);
+            mListAdapter.notifyDataSetChanged();
+        }
+    }
+
+// TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

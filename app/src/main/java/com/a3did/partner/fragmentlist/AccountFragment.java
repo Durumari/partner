@@ -6,10 +6,14 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 
+import com.a3did.partner.account.PartnerUserInfo;
 import com.a3did.partner.account.UserManager;
 import com.a3did.partner.adapterlist.AccountListAdapter;
 import com.a3did.partner.adapterlist.AssistantListAdapter;
@@ -83,6 +87,34 @@ public class AccountFragment extends android.support.v4.app.Fragment {
 
         mListView = (ListView)v.findViewById(R.id.Account_list);
         mListView.setAdapter(mListAdapter);
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                PopupMenu popup= new PopupMenu(getContext(), view);//view는 오래 눌러진 뷰를 의미
+                popup.getMenuInflater().inflate(R.menu.menu_account, popup.getMenu());
+                //Popup menu의 메뉴아이템을 눌렀을  때 보여질 ListView 항목의 위치
+                //Listener 안에서 사용해야 하기에 final로 선언
+                final int index= position;
+                //Popup Menu의 MenuItem을 클릭하는 것을 감지하는 listener 설정
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        // TODO Auto-generated method stub
+                        switch( item.getItemId() ){
+                            case R.id.login:
+                                UserManager userManager = UserManager.getInstance();
+                                userManager.setCurrentUserInfo(index);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
+                popup.show();//Popup Menu 보이기
+                return false;
+            }
+        });
         return v;
 
     }
