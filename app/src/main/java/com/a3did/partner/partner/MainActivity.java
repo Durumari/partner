@@ -282,6 +282,7 @@ public class MainActivity extends RecoRangingActivity
         mAssistantFragment = new AssistantFragment();
         mAchievementFragment = new AchievementFragment();
         mSafetyFragment = new SafetyFragment();
+        mSafetyFragment.setContext(this);
         mRewardFragment = new RewardFragment();
         mCompletedListFragment = new CompletedListFragment();
         mMissedListFragment = new MissedListFragment();

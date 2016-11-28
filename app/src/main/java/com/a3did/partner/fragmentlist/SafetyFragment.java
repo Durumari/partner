@@ -1,10 +1,13 @@
 package com.a3did.partner.fragmentlist;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -16,9 +19,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.a3did.partner.adapterlist.SafetyAdapter;
+import com.a3did.partner.partner.MainActivity;
 import com.a3did.partner.partner.R;
 import com.a3did.partner.registration.SafetyDialogFragment;
 import com.a3did.partner.registration.SafetyViewerDialogFragment;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
@@ -31,7 +44,7 @@ import java.util.ArrayList;
  * Use the {@link SafetyFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SafetyFragment extends android.support.v4.app.Fragment {
+public class SafetyFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -48,8 +61,19 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
     //ArrayAdapter<String> mListAdapter;
     SafetyAdapter mListAdapter;
 
+    static final LatLng SEOUL = new LatLng(37.56, 126.97);
+    private GoogleMap googleMap;
+    MapView mapView;
+    Context mContext;
+    MainActivity mActivity;
+
     public SafetyFragment() {
         // Required empty public constructor
+    }
+
+    public void setContext(Context context) {
+        mContext = context;
+        mActivity = (MainActivity) context;
     }
 
     /**
@@ -98,36 +122,26 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
         mListAdapter = new SafetyAdapter();
 
         mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
-                "자기 전에 영양제먹기", "11월 19일 오후 9시") ;
-        mListView = (ListView)v.findViewById(R.id.dangerous_area_list);
+                "자기 전에 영양제먹기", "11월 19일 오후 9시");
+        mListView = (ListView) v.findViewById(R.id.dangerous_area_list);
         mListView.setAdapter(mListAdapter);
 
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View v, int position,
-                                    long arg3) {
-                //String value = (String) adapter.getItemAtPosition(position);
-                Log.d("TEST", "list is pressed");
-
-                //map 에 제공할 long, lat 정보를 google api에 맞춰서 view에 보내주면 될듯
-                //번거로우면 너가 찾아보는거로 해도된다
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                View view = inflater.inflate(R.layout.fragment_gpsmap, null);
-                builder.setTitle("Dangerous Area");
-                builder.setView(view)
-                        .setPositiveButton("확인",null);
-
-                builder.show();
-
-
-
-            }
-        });
+        mListView.setOnItemClickListener(this);
 
         return v;
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        SafetyViewerDialogFragment dialogFragment= new SafetyViewerDialogFragment();
+        dialogFragment.geoInfo = SEOUL;
+        dialogFragment.mActivity = mActivity;
+        dialogFragment.show(mActivity.getFragmentManager(),"Dangerous Area");
+
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -153,6 +167,8 @@ public class SafetyFragment extends android.support.v4.app.Fragment {
         super.onDetach();
         mListener = null;
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
