@@ -1,33 +1,39 @@
 package com.a3did.partner.partner;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
-import android.os.RemoteException;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.text.Html;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.a3did.partner.account.UserManager;
@@ -40,29 +46,19 @@ import com.a3did.partner.fragmentlist.MissedListFragment;
 import com.a3did.partner.fragmentlist.RewardFragment;
 import com.a3did.partner.fragmentlist.SafetyFragment;
 import com.a3did.partner.partner.utils.AudioWriterPCM;
-import com.a3did.partner.recosample.RecoActivity;
-import com.a3did.partner.recosample.RecoBackgroundMonitoringService;
-import com.a3did.partner.recosample.RecoBackgroundRangingService;
-import com.a3did.partner.recosample.RecoMonitoringActivity;
-import com.a3did.partner.recosample.RecoMonitoringListAdapter;
 import com.a3did.partner.recosample.RecoRangingActivity;
 import com.naver.speech.clientapi.SpeechConfig;
 import com.perples.recosdk.RECOBeacon;
 import com.perples.recosdk.RECOBeaconRegion;
-import com.perples.recosdk.RECOBeaconRegionState;
-import com.perples.recosdk.RECOErrorCode;
-import com.perples.recosdk.RECOMonitoringListener;
 
 import net.daum.mf.speech.api.TextToSpeechClient;
 import net.daum.mf.speech.api.TextToSpeechListener;
 import net.daum.mf.speech.api.TextToSpeechManager;
 
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.text.DateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Locale;
 
 public class MainActivity extends RecoRangingActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -76,6 +72,30 @@ public class MainActivity extends RecoRangingActivity
         SafetyFragment.OnFragmentInteractionListener, TextToSpeechListener
 {
 
+
+    ////////////
+
+    private static final int REQUEST_SELECT_DEVICE = 1;
+    private static final int REQUEST_ENABLE_BT = 2;
+    private static final int UART_PROFILE_READY = 10;
+    public static final String TAG = "nRFUART";
+    private static final int UART_PROFILE_CONNECTED = 20;
+    private static final int UART_PROFILE_DISCONNECTED = 21;
+    private static final int STATE_OFF = 10;
+
+    TextView mRemoteRssiVal;
+    RadioGroup mRg;
+    private int mState = UART_PROFILE_DISCONNECTED;
+    private UartService mService = null;//new UartService();
+    private BluetoothDevice mDevice = null;
+    private BluetoothAdapter mBtAdapter = null;
+    private ListView messageListView;
+    private ArrayAdapter<String> listAdapter;
+    private Button btnConnectDisconnect,btnSend;
+    private EditText edtMessage;
+
+
+    ////////////////
 
     DefaultFragment mDefaultFragment;
     AccountFragment mAccountFragemt;
@@ -206,6 +226,43 @@ public class MainActivity extends RecoRangingActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar(toolbar);
+
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBtAdapter == null) {
+            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        service_init();
+
+        btnConnectDisconnect=(Button) findViewById(R.id.fab2);
+        btnConnectDisconnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mBtAdapter.isEnabled()) {
+                    Log.i(TAG, "onClick - BT not enabled yet");
+                    Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+                }
+                else {
+                    if (btnConnectDisconnect.getText().equals("Connect")){
+
+                        //Connect button pressed, open DeviceListActivity class, with popup windows that scan for devices
+
+                        Intent newIntent = new Intent(com.a3did.partner.partner.MainActivity.this, DeviceListActivity.class);
+                        startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+                    } else {
+                        //Disconnect button pressed
+                        if (mDevice!=null)
+                        {
+                            mService.disconnect();
+
+                        }
+                    }
+                }
+            }
+        });
+
 
 
         //User Management Instance
@@ -380,33 +437,6 @@ public class MainActivity extends RecoRangingActivity
     }
 
 
-    // Android Life cycle
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mNaverRecognizer.getSpeechRecognizer().initialize();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mNaverRecognizer.getSpeechRecognizer().stopImmediately();
-        mNaverRecognizer.getSpeechRecognizer().release();
-        isRunning = false;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        TextToSpeechManager.getInstance().finalizeLibrary();
-        login = false;
-        //stopService(intent);
-    }
 
     ////////////////////////////////////////////////////////////////
 
@@ -628,4 +658,243 @@ public class MainActivity extends RecoRangingActivity
          }
          //Write the code when the beacons in the region is received
      }
+
+
+    //UART service connected/disconnected
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder rawBinder) {
+            mService = ((UartService.LocalBinder) rawBinder).getService();
+            Log.d(TAG, "onServiceConnected mService= " + mService);
+            if (!mService.initialize()) {
+                Log.e(TAG, "Unable to initialize Bluetooth");
+                finish();
+            }
+
+        }
+
+        public void onServiceDisconnected(ComponentName classname) {
+            ////     mService.disconnect(mDevice);
+            mService = null;
+        }
+    };
+
+
+    private final BroadcastReceiver UARTStatusChangeReceiver = new BroadcastReceiver() {
+
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            final Intent mIntent = intent;
+            //*********************//
+            if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                        Log.d(TAG, "UART_CONNECT_MSG");
+                        btnConnectDisconnect.setText("Disconnect");
+//                        edtMessage.setEnabled(true);
+//                        btnSend.setEnabled(true);
+//                        ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName()+ " - ready");
+//                        listAdapter.add("["+currentDateTimeString+"] Connected to: "+ mDevice.getName());
+  //                      messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                        mState = UART_PROFILE_CONNECTED;
+                    }
+                });
+            }
+
+            //*********************//
+            if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+                        Log.d(TAG, "UART_DISCONNECT_MSG");
+//                        btnConnectDisconnect.setText("Connect");
+//                        edtMessage.setEnabled(false);
+//                        btnSend.setEnabled(false);
+//                        ((TextView) findViewById(R.id.deviceName)).setText("Not Connected");
+ //                       listAdapter.add("["+currentDateTimeString+"] Disconnected to: "+ mDevice.getName());
+                        mState = UART_PROFILE_DISCONNECTED;
+                        mService.close();
+                        //setUiState();
+
+                    }
+                });
+            }
+
+
+            //*********************//
+            if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
+                mService.enableTXNotification();
+            }
+            //*********************//
+            if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {
+
+                final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
+
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        try {
+                            Log.d("part", "jh : " + txValue +"");
+                            String text = new String(txValue, "UTF-8");
+                            String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+       //                     listAdapter.add("["+currentDateTimeString+"] RX: " + new java.math.BigInteger(txValue).toString(16));
+       //f                     messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
+                        }
+                    }
+                });
+            }
+            //*********************//
+            if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)){
+                //showMessage("Device doesn't support UART. Disconnecting");
+                mService.disconnect();
+            }
+
+
+        }
+    };
+
+
+    private void service_init() {
+        Intent bindIntent = new Intent(this, UartService.class);
+        bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
+    }
+
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UartService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(UartService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(UartService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(UartService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(UartService.DEVICE_DOES_NOT_SUPPORT_UART);
+        return intentFilter;
+    }
+
+
+
+
+
+    private Handler mHandler = new Handler() {
+        @Override
+
+        //Handler events that received from UART service
+        public void handleMessage(Message msg) {
+
+        }
+    };
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy()");
+        TextToSpeechManager.getInstance().finalizeLibrary();
+        login = false;
+        //stopService(intent);
+
+        try {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(UARTStatusChangeReceiver);
+        } catch (Exception ignore) {
+            Log.e(TAG, ignore.toString());
+        }
+        unbindService(mServiceConnection);
+        mService.stopSelf();
+        mService= null;
+
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause");
+        super.onPause();
+        mNaverRecognizer.getSpeechRecognizer().stopImmediately();
+        mNaverRecognizer.getSpeechRecognizer().release();
+        isRunning = false;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mNaverRecognizer.getSpeechRecognizer().initialize();
+        Log.d(TAG, "onResume");
+        if (!mBtAdapter.isEnabled()) {
+            Log.i(TAG, "onResume - BT not enabled yet");
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+
+        }
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+
+
+
+
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+
+            case REQUEST_SELECT_DEVICE:
+                //When the DeviceListActivity return, with the selected device address
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    String deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
+                    mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
+
+                    Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
+                    //((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName()+ " - connecting");
+                    mService.connect(deviceAddress);
+
+
+                }
+                break;
+            case REQUEST_ENABLE_BT:
+                // When the request to enable Bluetooth returns
+                if (resultCode == Activity.RESULT_OK) {
+                    Toast.makeText(this, "Bluetooth has turned on ", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    // User did not enable Bluetooth or an error occurred
+                    Log.d(TAG, "BT not enabled");
+                    Toast.makeText(this, "Problem in BT Turning ON ", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+            default:
+                Log.e(TAG, "wrong request code");
+                break;
+        }
+    }
+
+
+
+
+
 }

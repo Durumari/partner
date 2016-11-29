@@ -1,7 +1,6 @@
-package com.a3did.partner.ble;
+package com.a3did.partner.partner;
 
 
-import android.app.Activity;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

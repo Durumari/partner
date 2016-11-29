@@ -1,4 +1,4 @@
-package com.a3did.partner.ble;
+package com.a3did.partner.partner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
