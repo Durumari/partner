@@ -9,6 +9,7 @@ import com.a3did.partner.adapterlist.AssistantListData;
 import com.a3did.partner.adapterlist.CompletedListData;
 import com.a3did.partner.adapterlist.MissedListData;
 import com.a3did.partner.adapterlist.RewardListData;
+import com.a3did.partner.adapterlist.SafetyData;
 import com.a3did.partner.partner.R;
 
 import java.util.ArrayList;
@@ -156,6 +157,21 @@ public class UserManager {
         userInfo.mRewardInfoList.add(rewardListData);
 
         //safety
+        SafetyData safetyData = new SafetyData();
+        safetyData.setItem("Dangerous Area1",36.374701, 127.364428 );
+        userInfo.mSafetyInfoList.add(safetyData);
+
+        safetyData = new SafetyData();
+        safetyData.setItem("Dangerous Area2",36.368243, 127.366450 );
+        userInfo.mSafetyInfoList.add(safetyData);
+
+        safetyData = new SafetyData();
+        safetyData.setItem("Dangerous Area3",36.373716, 127.361950 );
+        userInfo.mSafetyInfoList.add(safetyData);
+
+        safetyData = new SafetyData();
+        safetyData.setItem("Dangerous Area4",36.371565, 127.361306 );
+        userInfo.mSafetyInfoList.add(safetyData);
 
         //completed
         CompletedListData completedListData = new CompletedListData();
