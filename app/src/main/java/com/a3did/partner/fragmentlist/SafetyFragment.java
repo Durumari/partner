@@ -1,36 +1,27 @@
 package com.a3did.partner.fragmentlist;
 
-import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.a3did.partner.account.PartnerUserInfo;
+import com.a3did.partner.account.UserManager;
 import com.a3did.partner.adapterlist.SafetyAdapter;
+import com.a3did.partner.adapterlist.SafetyData;
 import com.a3did.partner.partner.MainActivity;
 import com.a3did.partner.partner.R;
-import com.a3did.partner.registration.SafetyDialogFragment;
-import com.a3did.partner.registration.SafetyViewerDialogFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -44,11 +35,12 @@ import java.util.ArrayList;
  * Use the {@link SafetyFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SafetyFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemClickListener {
+public class SafetyFragment extends android.support.v4.app.Fragment implements AdapterView.OnItemClickListener, OnMapReadyCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final float ZOOM_LEVEL = 16.f;
     public String mName = "Safety";
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -66,6 +58,7 @@ public class SafetyFragment extends android.support.v4.app.Fragment implements A
     MapView mapView;
     Context mContext;
     MainActivity mActivity;
+    GoogleMap mMap = null;
 
     public SafetyFragment() {
         // Required empty public constructor
@@ -119,10 +112,18 @@ public class SafetyFragment extends android.support.v4.app.Fragment implements A
         mListView = (ListView)v.findViewById(R.id.dangerous_area_list);
         mListAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_expandable_list_item_1,mDateList);
         mListView.setAdapter(mListAdapter);*/
-        mListAdapter = new SafetyAdapter();
 
-        mListAdapter.addItem(ContextCompat.getDrawable(v.getContext(), R.drawable.ic_home_black_24dp),
-                "자기 전에 영양제먹기", "11월 19일 오후 9시");
+        SupportMapFragment mapFragment = (SupportMapFragment)getChildFragmentManager()
+                .findFragmentById(R.id.mapfragment);
+        mapFragment.getMapAsync(this);
+
+        mListAdapter = new SafetyAdapter();
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        if(userInfo != null){
+            mListAdapter.setList(userInfo.mSafetyInfoList);
+        }
+
         mListView = (ListView) v.findViewById(R.id.dangerous_area_list);
         mListView.setAdapter(mListAdapter);
 
@@ -132,14 +133,37 @@ public class SafetyFragment extends android.support.v4.app.Fragment implements A
         return v;
     }
 
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        if(mListAdapter.getList().size() == 0){
+            //mMap.addMarker(new MarkerOptions().position(SEOUL).title("Dangerous Area"));
+            //mMap.animateCamera(CameraUpdateFactory.newLatLng(SEOUL));
+        }
+        else{
+            ArrayList<SafetyData> list = mListAdapter.getList();
+            for(int i = 0; i < list.size() ; i++){
+                mMap.addMarker(new MarkerOptions().position(list.get(i).getGeoInfo()).title(list.get(i).getTitle()));
+
+            }
+            //처음엔 첫번째 꺼로 애니메이션
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(list.get(0).getGeoInfo(), ZOOM_LEVEL));
+        }
+
+
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        SafetyViewerDialogFragment dialogFragment= new SafetyViewerDialogFragment();
-        dialogFragment.geoInfo = SEOUL;
-        dialogFragment.mActivity = mActivity;
-        dialogFragment.show(mActivity.getFragmentManager(),"Dangerous Area");
-
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        if(userInfo != null){
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userInfo.mSafetyInfoList.get(position).getGeoInfo(), ZOOM_LEVEL));
+        }
     }
 
 
