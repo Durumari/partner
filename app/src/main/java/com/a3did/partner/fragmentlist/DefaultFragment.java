@@ -4,11 +4,16 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.a3did.partner.partner.MainActivity;
 import com.a3did.partner.partner.R;
+import android.view.View.OnClickListener;
+import static com.a3did.partner.partner.R.id.toolbar;
 
 
 /**
@@ -30,6 +35,7 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private ImageView[] images = new ImageView[4];
 
     public DefaultFragment() {
         // Required empty public constructor
@@ -66,8 +72,60 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_default, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_default, container, false);
+        images[0] = (ImageView) view.findViewById(R.id.imageView1);
+        images[1] = (ImageView) view.findViewById(R.id.imageView2);
+        images[2] = (ImageView) view.findViewById(R.id.imageView3);
+        images[3] = (ImageView) view.findViewById(R.id.imageView4);
+        for (int i = 0; i < images.length; i++) {
+            images[i].setOnClickListener(mOnClickListener);
+        }
+
+        return view;
+
     }
+    private final OnClickListener mOnClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.imageView1:
+                    Log.d("log", "Assistance");
+
+                    break;
+
+                case R.id.imageView2:
+                    Log.d("log", "Achievement");
+                    break;
+
+                case R.id.imageView3:
+                    Log.d("log", "Reward");
+                    break;
+
+                case R.id.imageView4:
+                    Log.d("log", "Completed List");
+                    break;
+
+                case R.id.imageMoomin:
+                    Log.d("log", "Moomin");
+                    break;
+
+                default:
+                    Log.d("log", "none of above");
+                    break;
+
+
+                // put your onclick code here
+            }
+//            for (int i = 0; i < images.length; i++) {
+//                if (v != images[i]) {
+//                    images[i].setVisibility(View.VISIBLE);
+//                }
+//            }
+//            v.setVisibility(View.GONE);
+        }
+    };
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -107,4 +165,38 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+//    public void onClickHandler (View v)
+//    {
+//        switch (v.getId()) {
+//            case R.id.imageView1:
+//                Log.d("log", "assistance");
+//
+//                break;
+//
+//            case R.id.imageView2:
+//                Log.d("log", "Achievement");
+//                break;
+//
+//            case R.id.imageView3:
+//                Log.d("log", "Assistance");
+//                break;
+//
+//            case R.id.imageView4:
+//                Log.d("log", "Reward");
+//                break;
+//
+//            case R.id.imageMoomin:
+//                Log.d("log", "Moomin");
+//                break;
+//
+//            default:
+//                Log.d("log", "Completed List");
+//                break;
+//
+//
+//            // put your onclick code here
+//        }
+//    }
+
+
 }
