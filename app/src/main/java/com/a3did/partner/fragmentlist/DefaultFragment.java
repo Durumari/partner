@@ -10,9 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.a3did.partner.account.PartnerUserInfo;
+import com.a3did.partner.account.UserManager;
 import com.a3did.partner.partner.MainActivity;
 import com.a3did.partner.partner.R;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
+
 import static com.a3did.partner.partner.R.id.toolbar;
 
 
@@ -38,6 +42,7 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
     private ImageView[] images = new ImageView[4];
     MainActivity mActivity;
     Context mContext;
+    UserManager mUserManager;
 
     public void setContext(Context context) {
         mContext = context;
@@ -116,9 +121,9 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
                     mActivity.transitionFragment(R.id.nav_completed_list);
                     break;
 
-                case R.id.imageMoomin:
-                    Log.d("log", "Moomin");
-                    break;
+//                case R.id.imageMoomin:
+//                    Log.d("log", "Moomin");
+//                    break;
 
                 default:
                     Log.d("log", "none of above");

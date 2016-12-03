@@ -69,11 +69,12 @@ public class UserManager {
         //최준현
         PartnerUserInfo userInfo = new PartnerUserInfo();
         userInfo.mName = "준현";
-        userInfo.mStarNumber = 500;
+        userInfo.mStarNumber = 400;
         userInfo.mBeaconInfo = "24DDF4118CF1440C87CDE368DAF9C93E";
         userInfo.mUserPhoneNumber = "01093348599";
         userInfo.mParentPhoneNumber = "01062747927";
         userInfo.mUID = hashCode();
+
         //정보 기입
 
         //assistant

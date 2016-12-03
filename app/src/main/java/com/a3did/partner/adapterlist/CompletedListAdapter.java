@@ -76,3 +76,4 @@ public class CompletedListAdapter extends BaseAdapter{
     }
 
 }
+

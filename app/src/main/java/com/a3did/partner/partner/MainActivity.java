@@ -280,6 +280,7 @@ public class MainActivity extends RecoRangingActivity
 
 
 
+
         //intent = new Intent(this, RecoBackgroundRangingService.class);
         //startService(intent);
 
@@ -435,7 +436,8 @@ public class MainActivity extends RecoRangingActivity
 
 
 
-
+        TextView titleTextView = (TextView) findViewById(R.id.default_star_num) ;
+        titleTextView.setText(mUserManager.getCurrentUserInfo().mStarNumber);
 
 
 
