@@ -59,6 +59,7 @@ class NaverRecognizer implements SpeechRecognitionListener {
 		Log.d(TAG, "Event occurred : Inactive");
 		Message msg = Message.obtain(mHandler, R.id.clientInactive);
 		msg.sendToTarget();
+
 	}
 
 	@Override
