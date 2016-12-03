@@ -436,8 +436,8 @@ public class MainActivity extends RecoRangingActivity
 
 
 
-        TextView titleTextView = (TextView) findViewById(R.id.default_star_num) ;
-        titleTextView.setText(mUserManager.getCurrentUserInfo().mStarNumber);
+//        TextView titleTextView = (TextView) findViewById(R.id.default_star_num) ;
+//        titleTextView.setText(mUserManager.getCurrentUserInfo().mStarNumber);
 
 
 
