@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -221,11 +222,16 @@ public class MainActivity extends RecoRangingActivity
 
 
     }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSupportActionBar(toolbar);
+
+
+
 
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBtAdapter == null) {
@@ -271,6 +277,7 @@ public class MainActivity extends RecoRangingActivity
         //기본 정보 기입
         mUserManager.generateInformation();
         mUserManager.setCurrentUserInfo(0);
+
 
 
 
@@ -335,6 +342,7 @@ public class MainActivity extends RecoRangingActivity
 
         //Initialize fragment
         mDefaultFragment = new DefaultFragment();
+        mDefaultFragment.setContext(this);
         mAccountFragemt = new AccountFragment();
         mAssistantFragment = new AssistantFragment();
         mAchievementFragment = new AchievementFragment();
@@ -424,6 +432,16 @@ public class MainActivity extends RecoRangingActivity
         toolbar.setTitle(mDefaultFragment.mName);
         getSupportFragmentManager().beginTransaction().replace(R.id.partner_container,mDefaultFragment).commit();
         mFragmentID = R.layout.fragment_default;
+
+
+
+
+//        TextView titleTextView = (TextView) findViewById(R.id.default_star_num) ;
+//        titleTextView.setText(mUserManager.getCurrentUserInfo().mStarNumber);
+
+
+
+
     }
 
     @Override
@@ -892,7 +910,6 @@ public class MainActivity extends RecoRangingActivity
                 break;
         }
     }
-
 
 
 

@@ -1,29 +1,97 @@
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.a3did.partner.fragmentlist.DefaultFragment">
+    <!--android:background="@color/pastelyellow"-->
 
     <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_circle_bottomright_completed"
+        android:id="@+id/imageView4"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/imageView3" />    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_circle_bottomright_completed"
+        android:id="@+id/imageView4"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/imageView3" />
+
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/cast_ic_mini_controller_stop_large"
-        android:id="@+id/imageView2"
-        android:layout_marginEnd="25dp"
-        android:layout_marginTop="28dp"
+        app:srcCompat="@drawable/ic_circle_top_calendar"
+        android:id="@+id/imageView1"
+        android:clickable="true"
+        android:onClick="onClickHandler"
         android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_circle_red_right"
+        android:id="@+id/imageView2"
+        android:clickable="true"
+        android:layout_below="@+id/linearLayout"
         android:layout_alignParentEnd="true" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/cast_ic_mini_controller_stop"
-        android:layout_below="@+id/imageView2"
+        app:srcCompat="@drawable/ic_circle_red__left_bottom"
+        android:id="@+id/imageView3"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="31dp"
-        android:layout_marginTop="93dp"
-        android:id="@+id/imageView3" />
+        android:layout_alignEnd="@+id/imageView1" />
+
+ <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:weightSum="1"
+        android:layout_alignStart="@+id/imageView2">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_pentagon_made_of_stars"
+            android:id="@+id/imageView5"
+            android:clickable="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/imageView2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="30dp"
+            android:text=" : "
+            android:id="@+id/textView3">
+        </TextView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="30dp"
+            android:text="500"
+            android:id="@+id/default_star_num">
+        </TextView>
+    </LinearLayout>
 </RelativeLayout>
