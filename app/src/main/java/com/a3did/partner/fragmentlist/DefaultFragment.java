@@ -36,7 +36,13 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
 
     private OnFragmentInteractionListener mListener;
     private ImageView[] images = new ImageView[4];
+    MainActivity mActivity;
+    Context mContext;
 
+    public void setContext(Context context) {
+        mContext = context;
+        mActivity = (MainActivity) context;
+    }
     public DefaultFragment() {
         // Required empty public constructor
     }
@@ -92,19 +98,22 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
             switch (v.getId()) {
                 case R.id.imageView1:
                     Log.d("log", "Assistance");
-
+                    mActivity.transitionFragment(R.id.nav_assistant);
                     break;
 
                 case R.id.imageView2:
                     Log.d("log", "Achievement");
+                    mActivity.transitionFragment(R.id.nav_achievement);
                     break;
 
                 case R.id.imageView3:
                     Log.d("log", "Reward");
+                    mActivity.transitionFragment(R.id.nav_reward);
                     break;
 
                 case R.id.imageView4:
                     Log.d("log", "Completed List");
+                    mActivity.transitionFragment(R.id.nav_completed_list);
                     break;
 
                 case R.id.imageMoomin:

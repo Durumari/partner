@@ -341,6 +341,7 @@ public class MainActivity extends RecoRangingActivity
 
         //Initialize fragment
         mDefaultFragment = new DefaultFragment();
+        mDefaultFragment.setContext(this);
         mAccountFragemt = new AccountFragment();
         mAssistantFragment = new AssistantFragment();
         mAchievementFragment = new AchievementFragment();
