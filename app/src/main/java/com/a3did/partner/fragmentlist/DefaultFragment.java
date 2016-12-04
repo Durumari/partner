@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,13 @@ import android.widget.ImageView;
 
 import com.a3did.partner.account.PartnerUserInfo;
 import com.a3did.partner.account.UserManager;
+import com.a3did.partner.adapterlist.RewardListAdapter;
 import com.a3did.partner.partner.MainActivity;
 import com.a3did.partner.partner.R;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import static com.a3did.partner.partner.R.id.textView;
 import static com.a3did.partner.partner.R.id.toolbar;
 
 
@@ -43,6 +46,9 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
     MainActivity mActivity;
     Context mContext;
     UserManager mUserManager;
+
+    ImageView ViewVoiceActive;
+    ImageView ViewVoiceInactive;
 
     public void setContext(Context context) {
         mContext = context;
@@ -92,6 +98,47 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
         for (int i = 0; i < images.length; i++) {
             images[i].setOnClickListener(mOnClickListener);
         }
+        RewardListAdapter mListAdapter = new RewardListAdapter();
+        UserManager userManager = UserManager.getInstance();
+        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+        if(userInfo != null){
+            Log.d("ERROR", "no user info");
+            mListAdapter.setList(userInfo.mRewardInfoList);
+        }
+
+        // Setting the number of list present
+        TextView mTextViewStar = (TextView) view.findViewById(R.id.default_star_num);
+        mTextViewStar.setText(""+userInfo.mStarNumber);
+        TextView mTextViewAssist = (TextView) view.findViewById(R.id.assistanceNum);
+        mTextViewAssist.setText(""+userInfo.mScheduleInfoList.size());
+        TextView mTextViewAchieve = (TextView) view.findViewById(R.id.achieveNum);
+        mTextViewAchieve.setText(""+userInfo.mAchievementInfoList.size());
+        TextView mTextViewReward = (TextView) view.findViewById(R.id.rewardNum);
+        mTextViewReward.setText(""+userInfo.mRewardInfoList.size());
+        TextView mTextViewCompleteList = (TextView) view.findViewById(R.id.completeNum);
+        mTextViewCompleteList.setText(""+userInfo.mCompletedInfoList.size());
+
+        //Checking voice recognition is activated or not
+        // red for not activated
+        // green for activated
+        ViewVoiceActive=(ImageView) view.findViewById(R.id.circleGreen);
+        ViewVoiceInactive=(ImageView) view.findViewById(R.id.circleRed);
+        /*mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mActivity.isRunning){
+                    Log.d("TEST","naver voice recognition activated");
+                    ViewVoiceActive.setVisibility(View.VISIBLE);
+                    ViewVoiceInactive.setVisibility(View.INVISIBLE);
+
+                }
+                else{
+                    Log.d("TEST","naver voice recognition not activated");
+                    ViewVoiceActive.setVisibility(View.INVISIBLE);
+                    ViewVoiceInactive.setVisibility(View.VISIBLE);
+                }
+            }
+        });*/
 
         return view;
     }
@@ -174,42 +221,11 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-//    public void onClickHandler (View v)
-//    {
-//        switch (v.getId()) {
-//            case R.id.imageView1:
-//                Log.d("log", "assistance");
-//
-//                break;
-//
-//            case R.id.imageView2:
-//                Log.d("log", "Achievement");
-//                break;
-//
-//            case R.id.imageView3:
-//                Log.d("log", "Assistance");
-//                break;
-//
-//            case R.id.imageView4:
-//                Log.d("log", "Reward");
-//                break;
-//
-//            case R.id.imageMoomin:
-//                Log.d("log", "Moomin");
-//                break;
-//
-//            default:
-//                Log.d("log", "Completed List");
-//                break;
-//
-//
-//            // put your onclick code here
-//        }
-//    }
 
 
 }
