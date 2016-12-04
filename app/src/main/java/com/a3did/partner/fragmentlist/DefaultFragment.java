@@ -123,23 +123,24 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
         // green for activated
         ViewVoiceActive=(ImageView) view.findViewById(R.id.circleGreen);
         ViewVoiceInactive=(ImageView) view.findViewById(R.id.circleRed);
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (mActivity.isRunning){
-                    Log.d("TEST","naver voice recognition activated");
-                    ViewVoiceActive.setVisibility(View.VISIBLE);
-                    ViewVoiceInactive.setVisibility(View.INVISIBLE);
+//        mActivity.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (mActivity.isRunning){
+//                    Log.d("TEST","naver voice recognition activated");
+//                    ViewVoiceActive.setVisibility(View.VISIBLE);
+//                    ViewVoiceInactive.setVisibility(View.INVISIBLE);
+//
+//                }
+//                else{
+//                    Log.d("TEST","naver voice recognition not activated");
+//                    ViewVoiceActive.setVisibility(View.INVISIBLE);
+//                    ViewVoiceInactive.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
 
-                }
-                else{
-                    Log.d("TEST","naver voice recognition not activated");
-                    ViewVoiceActive.setVisibility(View.INVISIBLE);
-                    ViewVoiceInactive.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
+        //return  new Activity_Animation_Layout(getActivity());
         return view;
     }
     private final OnClickListener mOnClickListener = new OnClickListener() {
@@ -188,9 +189,9 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
     };
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        public void onButtonPressed(Uri uri) {
+            if (mListener != null) {
+                mListener.onFragmentInteraction(uri);
         }
     }
 
