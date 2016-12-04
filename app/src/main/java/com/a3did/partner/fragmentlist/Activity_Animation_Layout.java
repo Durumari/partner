@@ -90,9 +90,17 @@ public class Activity_Animation_Layout extends View{
             y_dir = (-1)*y_dir;
         }
 
+        // TODO: need editing for beacon nearby
+//        if ( /*beacon is nearby*/){
+//            moomin_x = moomin_x + x_dir;
+//            moomin_y = moomin_y + y_dir;
+//        }
+//        else /*beacon is not nearby*/{
+//            moomin_x = canvas.getWidth()/2 - moomin_w/2;
+//            moomin_y = canvas.getHeight()/2 - moomin_h/2 ;
+//            moominbm = BitmapFactory.decodeResource(getResources(), R.drawable.moomin_front);
+//        }
 
-        moomin_x = moomin_x + x_dir;
-        moomin_y = moomin_y + y_dir;
 
         canvas.drawBitmap(moominbm,moomin_x,moomin_y,null);
 
