@@ -121,9 +121,7 @@ public class MainActivity extends RecoRangingActivity
     private NaverRecognizer mNaverRecognizer;
     private String mResult;
     private AudioWriterPCM writer;
-    //private boolean isRunning;
-    public static TextToSpeechClient ttsClient;
-
+        public static TextToSpeechClient ttsClient;
     public UserManager mUserManager;
 
     // Intent intent;
@@ -367,7 +365,7 @@ public class MainActivity extends RecoRangingActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = "";
+                               String title = "";
                 switch (mFragmentID)
                 {
                     case R.layout.fragment_default:
