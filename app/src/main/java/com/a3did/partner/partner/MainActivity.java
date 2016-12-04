@@ -118,9 +118,8 @@ public class MainActivity extends RecoRangingActivity
     private NaverRecognizer mNaverRecognizer;
     private String mResult;
     private AudioWriterPCM writer;
-    private boolean isRunning;
+    public boolean isRunning;
     public static TextToSpeechClient ttsClient;
-
     public UserManager mUserManager;
 
     // Intent intent;
@@ -371,6 +370,7 @@ public class MainActivity extends RecoRangingActivity
                     // Start button is pushed when SpeechRecognizer's state is inactive.
                     // Run SpeechRecongizer by calling recognize().
                     mNaverRecognizer.recognize();
+
                     isRunning = true;
                 } else {
                     // This flow is occurred by pushing start button again

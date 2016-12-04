@@ -11,12 +11,24 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_circle_bottomright_completed"
-        android:id="@+id/imageView4"
+        app:srcCompat="@drawable/ic_circle_top_calendar"
+        android:id="@+id/imageView1"
         android:clickable="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/imageView3" />    <ImageView
+        android:onClick="onClickHandler"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="assistanceNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="64dp"
+        android:id="@+id/assistanceNum" />
+
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_circle_bottomright_completed"
@@ -27,15 +39,14 @@
         android:layout_alignTop="@+id/imageView3" />
 
 
-    <ImageView
+    <TextView
+        android:text="rewardNum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_circle_top_calendar"
-        android:id="@+id/imageView1"
-        android:clickable="true"
-        android:onClick="onClickHandler"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_above="@+id/completeNum"
+        android:layout_alignEnd="@+id/assistanceNum"
+        android:layout_marginEnd="15dp"
+        android:id="@+id/rewardNum" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -46,17 +57,17 @@
         android:layout_below="@+id/linearLayout"
         android:layout_alignParentEnd="true" />
 
-    <ImageView
+    <TextView
+        android:text="completeNum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_circle_red__left_bottom"
-        android:id="@+id/imageView3"
-        android:clickable="true"
+        android:layout_marginBottom="31dp"
+        android:id="@+id/completeNum"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/imageView1" />
+        android:layout_alignEnd="@+id/achieveNum"
+        android:layout_marginEnd="34dp" />
 
- <LinearLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -94,4 +105,42 @@
             android:id="@+id/default_star_num">
         </TextView>
     </LinearLayout>
+
+    <TextView
+        android:text="achieveNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/achieveNum"
+        tools:text="achieveNum"
+        android:layout_below="@+id/assistanceNum"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="18dp"
+        android:layout_marginTop="21dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_circle_red__left_bottom"
+        android:id="@+id/imageView3"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        app:srcCompat="@mipmap/ic_circle_green"
+        android:id="@+id/circleGreen"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+
+
+    <ImageView
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        app:srcCompat="@mipmap/ic_circle_red"
+        android:id="@+id/circleRed"
+        android:layout_alignTop="@+id/circleGreen"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
