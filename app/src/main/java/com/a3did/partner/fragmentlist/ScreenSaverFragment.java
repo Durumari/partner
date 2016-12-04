@@ -1,6 +1,5 @@
 package com.a3did.partner.fragmentlist;
 
-
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,14 +12,12 @@ import com.a3did.partner.account.PartnerUserInfo;
 import com.a3did.partner.account.UserManager;
 import com.a3did.partner.adapterlist.RewardListAdapter;
 import com.a3did.partner.partner.MainActivity;
-import com.a3did.partner.partner.R;
-
-/**
+import com.a3di/**
  * Created by edward on 12/4/2016.
  */
 
-public class ScreenSaverFragment extends android.support.v4.app.Fragment
-{
+
+public class ScreenSaverFragment extends android.support.v4.app.Fragment{
 
 
     private DefaultFragment.OnFragmentInteractionListener mListener;

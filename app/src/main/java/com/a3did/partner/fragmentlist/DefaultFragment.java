@@ -123,24 +123,14 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
         // green for activated
         ViewVoiceActive=(ImageView) view.findViewById(R.id.circleGreen);
         ViewVoiceInactive=(ImageView) view.findViewById(R.id.circleRed);
-//        mActivity.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (mActivity.isRunning){
-//                    Log.d("TEST","naver voice recognition activated");
-//                    ViewVoiceActive.setVisibility(View.VISIBLE);
-//                    ViewVoiceInactive.setVisibility(View.INVISIBLE);
-//
-//                }
-//                else{
-//                    Log.d("TEST","naver voice recognition not activated");
-//                    ViewVoiceActive.setVisibility(View.INVISIBLE);
-//                    ViewVoiceInactive.setVisibility(View.VISIBLE);
-//                }
-//            }
-//        });
-
-        //return  new Activity_Animation_Layout(getActivity());
+        /*mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mActivity.isRunning){
+                    Log.d("TEST","naver voice recognition activated");
+                    ViewVoiceActive.setVisibility(View.VISIBLE);
+                    ViewVoiceInactive.setVisibility(View.INVISIBLE);
+        });*/
         return view;
     }
     private final OnClickListener mOnClickListener = new OnClickListener() {

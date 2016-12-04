@@ -107,7 +107,7 @@ public class UserManager {
         AchievementListData achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
                 "수학 시험 100점 맞기", 10, "11월 19일 오후 3시", "12월 20일 오후 3시");
-        achievementlistData.addGuide("선생님이 내주신 숙제만 잘하면 되요");
+        achievementlistData.addGuide("선생님이 내주신 숙제만 잘하면 돼요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         achievementlistData = new AchievementListData();

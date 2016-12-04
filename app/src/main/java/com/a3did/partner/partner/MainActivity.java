@@ -37,6 +37,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.a3did.partner.account.PartnerUserInfo;
 import com.a3did.partner.account.UserManager;
 import com.a3did.partner.fragmentlist.AccountFragment;
 import com.a3did.partner.fragmentlist.AchievementFragment;
@@ -48,6 +49,7 @@ import com.a3did.partner.fragmentlist.RewardFragment;
 import com.a3did.partner.fragmentlist.SafetyFragment;
 import com.a3did.partner.partner.utils.AudioWriterPCM;
 import com.a3did.partner.recosample.RecoRangingActivity;
+import com.google.firebase.auth.UserInfo;
 import com.naver.speech.clientapi.SpeechConfig;
 import com.perples.recosdk.RECOBeacon;
 import com.perples.recosdk.RECOBeaconRegion;
@@ -95,6 +97,7 @@ public class MainActivity extends RecoRangingActivity
     private Button btnConnectDisconnect,btnSend;
     private EditText edtMessage;
 
+    public InteractionManager mInteractionManager;
 
     ////////////////
 
@@ -118,12 +121,11 @@ public class MainActivity extends RecoRangingActivity
     private NaverRecognizer mNaverRecognizer;
     private String mResult;
     private AudioWriterPCM writer;
-    public boolean isRunning;
-    public static TextToSpeechClient ttsClient;
+        public static TextToSpeechClient ttsClient;
     public UserManager mUserManager;
 
     // Intent intent;
-
+/*
     //Voice recognition Handler
     private void handleMessage(Message msg) {
         switch (msg.what) {
@@ -194,11 +196,13 @@ public class MainActivity extends RecoRangingActivity
                     writer.close();
                 }
 
+
+                isRunning = false;
+                //mNaverRecognizer.recognize();
                 mResult = "Error code : " + msg.obj.toString();
                 //txtResult.setText(mResult);
                 //btnStart.setText(R.string.str_start);
                 //btnStart.setEnabled(true);
-                isRunning = false;
 
                 Log.d("Partner","recognitionError");
 
@@ -214,6 +218,10 @@ public class MainActivity extends RecoRangingActivity
                 //btnStart.setText(R.string.str_start);
                 //btnStart.setEnabled(true);
                 isRunning = false;
+
+
+
+
                 break;
         }
         Log.d("Partner","ID" + msg.what + "text result : " + mResult);
@@ -222,7 +230,7 @@ public class MainActivity extends RecoRangingActivity
 
     }
 
-
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -271,7 +279,7 @@ public class MainActivity extends RecoRangingActivity
 
 
         //User Management Instance
-        mUserManager = mUserManager.getInstance();
+        mUserManager = UserManager.getInstance();
         mUserManager.setContext(this);
         //기본 정보 기입
         mUserManager.generateInformation();
@@ -319,23 +327,16 @@ public class MainActivity extends RecoRangingActivity
         handler = new RecognitionHandler(this);
         mNaverRecognizer = new NaverRecognizer(this, handler, CLIENT_ID, SPEECH_CONFIG);
 
-
-
-
-
-
         //Recognizer setting
-        /*if (!isRunning) {
-            // Start button is pushed when SpeechRecognizer's state is inactive.
-            // Run SpeechRecongizer by calling recognize().
-            mNaverRecognizer.recognize();
-        } else {
-            // This flow is occurred by pushing start button again
-            // when SpeechRecognizer is running.
-            // Because it means that a user wants to cancel speech
-            // recognition commonly, so call stop().
-            mNaverRecognizer.getSpeechRecognizer().stop();
-        }*/
+
+        mNaverRecognizer.recognize();
+
+        //Interaction Initialization
+        mInteractionManager = InteractionManager.getInstance();
+        mInteractionManager.Init(mNaverRecognizer, ttsClient, this);
+
+
+
 
 
 
@@ -364,25 +365,7 @@ public class MainActivity extends RecoRangingActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //Recognizer setting test
-                if (!isRunning) {
-                    // Start button is pushed when SpeechRecognizer's state is inactive.
-                    // Run SpeechRecongizer by calling recognize().
-                    mNaverRecognizer.recognize();
-
-                    isRunning = true;
-                } else {
-                    // This flow is occurred by pushing start button again
-                    // when SpeechRecognizer is running.
-                    // Because it means that a user wants to cancel speech
-                    // recognition commonly, so call stop().
-                    mNaverRecognizer.getSpeechRecognizer().stop();
-                    isRunning = false;
-                }
-
-
-                String title = "";
+                               String title = "";
                 switch (mFragmentID)
                 {
                     case R.layout.fragment_default:
@@ -432,8 +415,6 @@ public class MainActivity extends RecoRangingActivity
         toolbar.setTitle(mDefaultFragment.mName);
         getSupportFragmentManager().beginTransaction().replace(R.id.partner_container,mDefaultFragment).commit();
         mFragmentID = R.layout.fragment_default;
-
-
 
 
 //        TextView titleTextView = (TextView) findViewById(R.id.default_star_num) ;
@@ -496,40 +477,47 @@ public class MainActivity extends RecoRangingActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.partner_container,mAssistantFragment).commit();
                 toolbar.setTitle(mAssistantFragment.mName);
                 mFragmentID = R.layout.fragment_assistant;
+                mInteractionManager.mSystemMode = InteractionManager.MenuType.ASSISTANT;
                 break;
             case R.id.nav_achievement:
                 getSupportFragmentManager().beginTransaction().replace(R.id.partner_container,mAchievementFragment).commit();
                 toolbar.setTitle(mAchievementFragment.mName);
                 mFragmentID = R.layout.fragment_achievement;
+                mInteractionManager.mSystemMode = InteractionManager.MenuType.ACHIEVEMENT;
                 break;
             case R.id.nav_safety:
                 getSupportFragmentManager().beginTransaction().replace(R.id.partner_container,mSafetyFragment).commit();
                 toolbar.setTitle(mSafetyFragment.mName);
                 mFragmentID = R.layout.fragment_safety;
+                mInteractionManager.mSystemMode = InteractionManager.MenuType.SAFETY;
                 break;
             case R.id.nav_reward:
                 getSupportFragmentManager().beginTransaction().replace(R.id.partner_container,mRewardFragment).commit();
                 toolbar.setTitle(mRewardFragment.mName);
                 mFragmentID = R.layout.fragment_reward;
+                mInteractionManager.mSystemMode = InteractionManager.MenuType.REWARD;
                 break;
             case R.id.nav_account:
                 getSupportFragmentManager().beginTransaction().replace(R.id.partner_container,mAccountFragemt).commit();
                 toolbar.setTitle(mAccountFragemt.mName);
                 mFragmentID = R.layout.fragment_account;
+                mInteractionManager.mSystemMode = InteractionManager.MenuType.ACCOUNT;
                 break;
             case R.id.nav_completed_list:
                 getSupportFragmentManager().beginTransaction().replace(R.id.partner_container,mCompletedListFragment).commit();
                 toolbar.setTitle(mCompletedListFragment.mName);
                 mFragmentID = R.layout.fragment_completed_list;
+                mInteractionManager.mSystemMode = InteractionManager.MenuType.COMPLETED;
                 break;
             case R.id.nav_missed_list:
                 getSupportFragmentManager().beginTransaction().replace(R.id.partner_container,mMissedListFragment).commit();
                 toolbar.setTitle(mMissedListFragment.mName);
                 mFragmentID = R.layout.fragment_missed_list;
+                mInteractionManager.mSystemMode = InteractionManager.MenuType.MISSED;
                 break;
 
             default:
-
+                mInteractionManager.mSystemMode = InteractionManager.MenuType.DEFAULT;
         };
 
 
@@ -575,7 +563,7 @@ public class MainActivity extends RecoRangingActivity
         public void handleMessage(Message msg) {
             MainActivity activity = mActivity.get();
             if (activity != null) {
-                activity.handleMessage(msg);
+                activity.mInteractionManager.handleVoiceMessage(msg);
             }
         }
     }
@@ -655,24 +643,34 @@ public class MainActivity extends RecoRangingActivity
      public void didRangeBeaconsInRegion(Collection<RECOBeacon> recoBeacons, RECOBeaconRegion recoRegion) {
          Log.i("RECORangingActivity", "didRangeBeaconsInRegion() region: " + recoRegion.getUniqueIdentifier() + ", number of beacons ranged: " + recoBeacons.size());
 
+         InteractionManager interactionManager = InteractionManager.getInstance();
+
+
          if(recoBeacons.size() != 0)
          {
+             interactionManager.sendBeaconData(recoBeacons);
              RECOBeacon beco = recoBeacons.iterator().next();
              Log.d("test", beco.getProximityUuid());
+             PartnerUserInfo info = mUserManager.getCurrentUserInfo();
+             /*if(info.mBeaconInfo.equals(beco.getProximityUuid()))
+             {
+                 if(!ttsClient.isPlaying())
+                    ttsClient.play("안녕하세요!");
+             }*/
              if(!login) {
                  if(!ttsClient.isPlaying())
                      login = true;
-                 ttsClient.play("안녕하세요~ 준현씨.");
+                 ttsClient.play("안녕하세요!");
              }
          }
          else
          {
-             if(login) {
+             /*if(login) {
                  if(!ttsClient.isPlaying())
                      login = false;
                  ttsClient.play("안녕히가세요.");
 
-             }
+             }*/
          }
          //Write the code when the beacons in the region is received
      }
@@ -841,7 +839,6 @@ public class MainActivity extends RecoRangingActivity
         super.onPause();
         mNaverRecognizer.getSpeechRecognizer().stopImmediately();
         mNaverRecognizer.getSpeechRecognizer().release();
-        isRunning = false;
     }
 
     @Override
