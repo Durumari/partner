@@ -12,7 +12,9 @@ import com.a3did.partner.account.PartnerUserInfo;
 import com.a3did.partner.account.UserManager;
 import com.a3did.partner.adapterlist.RewardListAdapter;
 import com.a3did.partner.partner.MainActivity;
-import com.a3di/**
+import com.a3did.partner.partner.R;
+
+/**
  * Created by edward on 12/4/2016.
  */
 

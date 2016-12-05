@@ -17,8 +17,7 @@ import com.a3did.partner.partner.R;
  */
 
 public class Activity_Animation_Layout extends View{
-    Paint red_paintbrush_fill, green_paintbrush_fill, blue_paintbrush_fill ;
-    Paint red_paintbrush_stroke, green_paintbrush_stroke, blue_paintbrush_stroke;
+
     Bitmap moominbm;
     int moomin_x, moomin_y;
     int moomin_h, moomin_w;
@@ -29,37 +28,6 @@ public class Activity_Animation_Layout extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-        red_paintbrush_fill = new Paint();
-        red_paintbrush_fill.setColor(Color.RED);
-        red_paintbrush_fill.setStyle(Paint.Style.FILL);
-
-        green_paintbrush_fill = new Paint();
-        green_paintbrush_fill.setColor(Color.GREEN);
-        green_paintbrush_fill.setStyle(Paint.Style.FILL);
-
-        blue_paintbrush_fill = new Paint();
-        blue_paintbrush_fill.setColor(Color.BLUE);
-        blue_paintbrush_fill.setStyle(Paint.Style.FILL);
-
-        red_paintbrush_stroke = new Paint();
-        red_paintbrush_stroke.setColor(Color.RED);
-        red_paintbrush_stroke.setStyle(Paint.Style.STROKE);
-        red_paintbrush_stroke.setStrokeWidth(10);
-
-        green_paintbrush_stroke = new Paint();
-        green_paintbrush_stroke.setColor(Color.GREEN);
-        green_paintbrush_stroke.setStyle(Paint.Style.STROKE);
-        green_paintbrush_stroke.setStrokeWidth(10);
-
-        blue_paintbrush_stroke = new Paint();
-        blue_paintbrush_stroke.setColor(Color.BLUE);
-        blue_paintbrush_stroke.setStyle(Paint.Style.STROKE);
-        blue_paintbrush_stroke.setStrokeWidth(10);
-
-//        Rect rectangle = new Rect();
-//        rectangle.set(210,125,250,175);
-//        canvas.drawRect(rectangle, green_paintbrush_stroke);
 
         //Moomin
         if (moominbm == null){
