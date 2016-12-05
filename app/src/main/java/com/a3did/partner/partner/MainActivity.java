@@ -20,6 +20,7 @@ import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -113,124 +114,16 @@ public class MainActivity extends RecoRangingActivity
     FloatingActionButton fab;
     int mFragmentID;
 
-    public static final String DAUM_KEY = "3d03690d5e27935dc3be9bb14c52ee98";
-    private static String CLIENT_ID = "8_h3SjFEfYR7rygZLHz4"; // "내 애플리케이션"에서 Client ID를 확인해서 이곳에 적어주세요.
-    private static SpeechConfig SPEECH_CONFIG = SpeechConfig.OPENAPI_KR; // or SpeechConfig.OPENAPI_EN
+    public boolean isOnPause = false;
 
-    private RecognitionHandler handler;
-    private NaverRecognizer mNaverRecognizer;
+    public static final String DAUM_KEY = "3d03690d5e27935dc3be9bb14c52ee98";
+
+    //private NaverRecognizer mNaverRecognizer;
     private String mResult;
     private AudioWriterPCM writer;
         public static TextToSpeechClient ttsClient;
     public UserManager mUserManager;
 
-    // Intent intent;
-/*
-    //Voice recognition Handler
-    private void handleMessage(Message msg) {
-        switch (msg.what) {
-            case R.id.clientReady:
-                // Now an user can speak.
-                //txtResult.setText("Connected");
-                writer = new AudioWriterPCM(
-                        Environment.getExternalStorageDirectory().getAbsolutePath() + "/NaverSpeechTest");
-                writer.open("Test");
-                break;
-
-            case R.id.audioRecording:
-                writer.write((short[]) msg.obj);
-                break;
-
-            case R.id.partialResult:
-                // Extract obj property typed with String.
-                mResult = (String) (msg.obj);
-                //txtResult.setText(mResult);
-                break;
-
-            case R.id.finalResult:
-                // Extract obj property typed with String array.
-                // The first element is recognition result for speech.
-                String[] results = (String[]) msg.obj;
-                mResult = results[0];
-                //txtResult.setText(mResult);
-                if(ttsClient == null)
-                    break;
-                if(mResult.contains("파트너"))
-                {
-                    ttsClient.play("네 준현씨");
-                }
-                else if(mResult.contains("일정"))
-                {
-                    ttsClient.play("네 일정 보여드릴게요.");
-                    transitionFragment(R.id.nav_assistant);
-                }
-                else if(mResult.contains("목표"))
-                {
-                    ttsClient.play("네 목표 보여드릴게요.");
-                    transitionFragment(R.id.nav_achievement);
-                }
-                else if(mResult.contains("보상"))
-                {
-                    ttsClient.play("네 보상 탭 보여드릴게요.");
-                    transitionFragment(R.id.nav_reward);
-                }
-                else if(mResult.contains("설정"))
-                {
-                    ttsClient.play("네 설정 탭 보여드릴게요.");
-                    transitionFragment(R.id.nav_account);
-                }
-                else if(mResult.contains("완료"))
-                {
-                    ttsClient.play("네 완료리스트 보여드릴게요.");
-                    transitionFragment(R.id.nav_completed_list);
-                }
-                else if(mResult.contains("실패"))
-                {
-                    ttsClient.play("네 실패리스트 보여드릴게요.");
-                    transitionFragment(R.id.nav_missed_list);
-                }
-                break;
-
-            case R.id.recognitionError:
-                if (writer != null) {
-                    writer.close();
-                }
-
-
-                isRunning = false;
-                //mNaverRecognizer.recognize();
-                mResult = "Error code : " + msg.obj.toString();
-                //txtResult.setText(mResult);
-                //btnStart.setText(R.string.str_start);
-                //btnStart.setEnabled(true);
-
-                Log.d("Partner","recognitionError");
-
-
-                break;
-
-            case R.id.clientInactive:
-                if (writer != null) {
-                    writer.close();
-                }
-
-                Log.d("Partner","clientInactive");
-                //btnStart.setText(R.string.str_start);
-                //btnStart.setEnabled(true);
-                isRunning = false;
-
-
-
-
-                break;
-        }
-        Log.d("Partner","ID" + msg.what + "text result : " + mResult);
-
-
-
-    }
-
-*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -324,16 +217,11 @@ public class MainActivity extends RecoRangingActivity
         //ttsClient.play("파트너 앱 실행합니다.");
 
         //Naver API 연동
-        handler = new RecognitionHandler(this);
-        mNaverRecognizer = new NaverRecognizer(this, handler, CLIENT_ID, SPEECH_CONFIG);
 
-        //Recognizer setting
-
-        mNaverRecognizer.recognize();
 
         //Interaction Initialization
         mInteractionManager = InteractionManager.getInstance();
-        mInteractionManager.Init(mNaverRecognizer, ttsClient, this);
+        mInteractionManager.Init(ttsClient, this);
 
 
 
@@ -562,7 +450,8 @@ public class MainActivity extends RecoRangingActivity
         @Override
         public void handleMessage(Message msg) {
             MainActivity activity = mActivity.get();
-            if (activity != null) {
+            if (activity != null && !activity.isOnPause) {
+
                 activity.mInteractionManager.handleVoiceMessage(msg);
             }
         }
@@ -793,16 +682,6 @@ public class MainActivity extends RecoRangingActivity
 
 
 
-
-    private Handler mHandler = new Handler() {
-        @Override
-
-        //Handler events that received from UART service
-        public void handleMessage(Message msg) {
-
-        }
-    };
-
     @Override
     public void onStart() {
         super.onStart();
@@ -835,10 +714,16 @@ public class MainActivity extends RecoRangingActivity
 
     @Override
     protected void onPause() {
+
+        isOnPause = true;
+        if(mInteractionManager.mNaverRecognizer != null && mInteractionManager.mNaverRecognizer.getSpeechRecognizer() != null) {
+            Log.d(TAG, "onPause");
+            mInteractionManager.mNaverRecognizer.getSpeechRecognizer().stopImmediately();
+            mInteractionManager.mNaverRecognizer.getSpeechRecognizer().release();
+        }
+
         Log.d(TAG, "onPause");
         super.onPause();
-        mNaverRecognizer.getSpeechRecognizer().stopImmediately();
-        mNaverRecognizer.getSpeechRecognizer().release();
     }
 
     @Override
@@ -850,7 +735,11 @@ public class MainActivity extends RecoRangingActivity
     @Override
     public void onResume() {
         super.onResume();
-        mNaverRecognizer.getSpeechRecognizer().initialize();
+        isOnPause = false;
+        if(mInteractionManager.mNaverRecognizer != null && mInteractionManager.mNaverRecognizer.getSpeechRecognizer() != null) {
+            Log.d(TAG, "onResume1");
+            mInteractionManager.mNaverRecognizer.getSpeechRecognizer().initialize();
+        }
         Log.d(TAG, "onResume");
         if (!mBtAdapter.isEnabled()) {
             Log.i(TAG, "onResume - BT not enabled yet");

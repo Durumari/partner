@@ -10,6 +10,7 @@ import com.a3did.partner.adapterlist.AchievementListData;
 import com.a3did.partner.adapterlist.AssistantListData;
 import com.a3did.partner.adapterlist.RewardListData;
 import com.a3did.partner.partner.utils.AudioWriterPCM;
+import com.naver.speech.clientapi.SpeechConfig;
 import com.perples.recosdk.RECOBeacon;
 
 import net.daum.mf.speech.api.TextToSpeechClient;
@@ -31,6 +32,11 @@ public class InteractionManager {
     public NaverRecognizer mNaverRecognizer;
     private boolean mIsRecognizerReady;
     private AudioWriterPCM writer;
+    private static String CLIENT_ID = "8_h3SjFEfYR7rygZLHz4"; // "내 애플리케이션"에서 Client ID를 확인해서 이곳에 적어주세요.
+    private static SpeechConfig SPEECH_CONFIG = SpeechConfig.OPENAPI_KR; // or SpeechConfig.OPENAPI_EN
+
+    private MainActivity.RecognitionHandler handler;
+
 
     public enum MenuType{
         DEFAULT,
@@ -55,8 +61,14 @@ public class InteractionManager {
         mDetailMode = 0;
     }
 
-    public void Init(NaverRecognizer reco, TextToSpeechClient tts, MainActivity activity){
-        mNaverRecognizer = reco;
+    public void Init(TextToSpeechClient tts, MainActivity activity){
+
+        handler = new MainActivity.RecognitionHandler(activity);
+        mNaverRecognizer = new NaverRecognizer(activity, handler, CLIENT_ID, SPEECH_CONFIG);
+
+
+        //Recognizer setting
+        mNaverRecognizer.recognize();
         ttsClient = tts;
         mActivity = activity;
         setVoiceRecoReady(true);
@@ -154,15 +166,20 @@ public class InteractionManager {
                 Log.d("Partner","clientInactive");
                 //btnStart.setText(R.string.str_start);
                 //btnStart.setEnabled(true);
-                mActivity.runOnUiThread(new Runnable() {
-                   @Override
-                   public void run() {
+                if(!mActivity.isOnPause){
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
 
-                       Log.d("Partner","re-connect Recognizer");
-                       mNaverRecognizer.recognize();
-                   }
+                            Log.d("Partner","re-connect Recognizer");
+                            //if()
+                            mNaverRecognizer.recognize();
+
+
+                        }
+                    });
                 }
-            );
+
             break;
         }
         Log.d("Partner","ID" + msg.what + "text result : " + mResult);
@@ -195,6 +212,13 @@ public class InteractionManager {
                 mActivity.transitionFragment(R.id.nav_account);
                 mSystemMode = MenuType.ACCOUNT;
                 return true;
+
+            } else if (mResult.contains("보안")) {
+                ttsClient.play("네 보안 탭 보여드릴게요.");
+                mActivity.transitionFragment(R.id.nav_safety);
+                mSystemMode = MenuType.SAFETY;
+                return true;
+
             } else if (mResult.contains("완료")) {
                 ttsClient.play("네 완료리스트 보여드릴게요.");
                 mActivity.transitionFragment(R.id.nav_completed_list);
