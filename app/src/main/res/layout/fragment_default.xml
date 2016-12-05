@@ -10,77 +10,119 @@
     <!-- TODO: Update blank fragment layout -->
 
 
-
-
-
-    <TextView
-        android:text="assistanceNum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="64dp"
-        android:id="@+id/assistanceNum" />
-
-    <TextView
-        android:text="completeNum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="31dp"
-        android:id="@+id/completeNum"
-        android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/achieveNum"
-        android:layout_marginEnd="34dp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/linearLayout"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:weightSum="1">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
             app:srcCompat="@drawable/ic_pentagon_made_of_stars"
             android:id="@+id/imageView5"
             android:clickable="true"
             android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/imageView2" />
+            android:layout_alignStart="@+id/image_star" />
+
+
 
         <TextView
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:gravity="center"
             android:textSize="30dp"
-            android:text=" : "
-            android:id="@+id/textView3">
-        </TextView>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAlignment="center"
-            android:gravity="center"
-            android:textSize="30dp"
+            android:textColor="#FFDA44"
             android:text="500"
             android:id="@+id/default_star_num">
         </TextView>
-    </LinearLayout>
+</LinearLayout>
 
+
+
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="275dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="60dp"
+        app:srcCompat="@drawable/menubutton_schedule"
+        android:id="@+id/menubutton_schedule"/>
     <TextView
-        android:text="achieveNum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/achieveNum"
-        tools:text="achieveNum"
-        android:layout_below="@+id/assistanceNum"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="18dp"
-        android:layout_marginTop="21dp" />
+        android:layout_alignRight="@id/menubutton_schedule"
+        android:layout_alignTop="@id/menubutton_schedule"
+        android:layout_marginTop="198dp"
+        android:layout_marginRight="50dp"
+        android:text="55"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:id="@+id/num_schedule" />
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="275dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="60dp"
+        app:srcCompat="@drawable/menubutton_goal"
+        android:id="@+id/menubutton_goal"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/menubutton_goal"
+        android:layout_alignTop="@id/menubutton_goal"
+        android:layout_marginTop="198dp"
+        android:layout_marginRight="50dp"
+        android:text="55"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:id="@+id/num_goal" />
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="275dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="60dp"
+        app:srcCompat="@drawable/menubutton_complete"
+        android:id="@+id/menubutton_complete"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/menubutton_complete"
+        android:layout_alignTop="@id/menubutton_complete"
+        android:layout_marginTop="198dp"
+        android:layout_marginRight="50dp"
+        android:text="55"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:id="@+id/num_complete" />
+
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="275dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="60dp"
+        app:srcCompat="@drawable/menubutton_reward"
+        android:id="@+id/menubutton_reward"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/menubutton_reward"
+        android:layout_alignTop="@+id/menubutton_reward"
+        android:layout_marginTop="198dp"
+        android:layout_marginRight="50dp"
+        android:text="55"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        android:id="@+id/num_reward" />
 
 
 </RelativeLayout>

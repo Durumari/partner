@@ -68,7 +68,8 @@ public class Activity_Animation_Layout extends View{
 //            moomin_y = canvas.getHeight()/2 - moomin_h/2 ;
 //            moominbm = BitmapFactory.decodeResource(getResources(), R.drawable.moomin_front);
 //        }
-
+            moomin_x = moomin_x + x_dir;
+            moomin_y = moomin_y + y_dir;
 
         canvas.drawBitmap(moominbm,moomin_x,moomin_y,null);
 

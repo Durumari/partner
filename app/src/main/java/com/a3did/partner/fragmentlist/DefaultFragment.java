@@ -91,10 +91,10 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_default, container, false);
-        images[0] = (ImageView) view.findViewById(R.id.imageView1);
-        images[1] = (ImageView) view.findViewById(R.id.imageView2);
-        images[2] = (ImageView) view.findViewById(R.id.imageView3);
-        images[3] = (ImageView) view.findViewById(R.id.imageView4);
+        images[0] = (ImageView) view.findViewById(R.id.menubutton_schedule);
+        images[1] = (ImageView) view.findViewById(R.id.menubutton_goal);
+        images[2] = (ImageView) view.findViewById(R.id.menubutton_reward);
+        images[3] = (ImageView) view.findViewById(R.id.menubutton_complete);
         for (int i = 0; i < images.length; i++) {
             images[i].setOnClickListener(mOnClickListener);
         }
@@ -109,20 +109,20 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
         // Setting the number of list present
         TextView mTextViewStar = (TextView) view.findViewById(R.id.default_star_num);
         mTextViewStar.setText(""+userInfo.mStarNumber);
-        TextView mTextViewAssist = (TextView) view.findViewById(R.id.assistanceNum);
+        TextView mTextViewAssist = (TextView) view.findViewById(R.id.num_schedule);
         mTextViewAssist.setText(""+userInfo.mScheduleInfoList.size());
-        TextView mTextViewAchieve = (TextView) view.findViewById(R.id.achieveNum);
+        TextView mTextViewAchieve = (TextView) view.findViewById(R.id.num_goal);
         mTextViewAchieve.setText(""+userInfo.mAchievementInfoList.size());
-        TextView mTextViewReward = (TextView) view.findViewById(R.id.rewardNum);
+        TextView mTextViewReward = (TextView) view.findViewById(R.id.num_reward);
         mTextViewReward.setText(""+userInfo.mRewardInfoList.size());
-        TextView mTextViewCompleteList = (TextView) view.findViewById(R.id.completeNum);
+        TextView mTextViewCompleteList = (TextView) view.findViewById(R.id.num_complete);
         mTextViewCompleteList.setText(""+userInfo.mCompletedInfoList.size());
 
         //Checking voice recognition is activated or not
         // red for not activated
         // green for activated
-        ViewVoiceActive=(ImageView) view.findViewById(R.id.circleGreen);
-        ViewVoiceInactive=(ImageView) view.findViewById(R.id.circleRed);
+//        ViewVoiceActive=(ImageView) view.findViewById(R.id.circleGreen);
+//        ViewVoiceInactive=(ImageView) view.findViewById(R.id.circleRed);
         /*mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -131,6 +131,7 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
                     ViewVoiceActive.setVisibility(View.VISIBLE);
                     ViewVoiceInactive.setVisibility(View.INVISIBLE);
         });*/
+        //return new Activity_Animation_Layout(getActivity());
         return view;
     }
     private final OnClickListener mOnClickListener = new OnClickListener() {
@@ -138,22 +139,22 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.imageView1:
+                case R.id.menubutton_schedule:
                     Log.d("log", "Assistance");
                     mActivity.transitionFragment(R.id.nav_assistant);
                     break;
 
-                case R.id.imageView2:
+                case R.id.menubutton_goal:
                     Log.d("log", "Achievement");
                     mActivity.transitionFragment(R.id.nav_achievement);
                     break;
 
-                case R.id.imageView3:
+                case R.id.menubutton_reward:
                     Log.d("log", "Reward");
                     mActivity.transitionFragment(R.id.nav_reward);
                     break;
 
-                case R.id.imageView4:
+                case R.id.menubutton_complete:
                     Log.d("log", "Completed List");
                     mActivity.transitionFragment(R.id.nav_completed_list);
                     break;
