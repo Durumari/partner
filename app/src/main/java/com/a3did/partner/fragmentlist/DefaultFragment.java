@@ -17,6 +17,7 @@ import com.a3did.partner.adapterlist.RewardListAdapter;
 import com.a3did.partner.partner.MainActivity;
 import com.a3did.partner.partner.R;
 import android.view.View.OnClickListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import static com.a3did.partner.partner.R.id.textView;
@@ -91,6 +92,10 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_default, container, false);
+        RelativeLayout relativeLayout = (RelativeLayout) view.findViewById(R.id.defaultlayout);
+        relativeLayout.addView(new Activity_Animation_Layout(getActivity()));
+
+
         images[0] = (ImageView) view.findViewById(R.id.menubutton_schedule);
         images[1] = (ImageView) view.findViewById(R.id.menubutton_goal);
         images[2] = (ImageView) view.findViewById(R.id.menubutton_reward);
@@ -131,8 +136,8 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
                     ViewVoiceActive.setVisibility(View.VISIBLE);
                     ViewVoiceInactive.setVisibility(View.INVISIBLE);
         });*/
-        //return new Activity_Animation_Layout(getActivity());
-        return view;
+        return relativeLayout;
+        //return view;
     }
     private final OnClickListener mOnClickListener = new OnClickListener() {
 

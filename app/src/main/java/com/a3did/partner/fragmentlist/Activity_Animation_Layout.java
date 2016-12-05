@@ -24,7 +24,6 @@ public class Activity_Animation_Layout extends View{
     int x_dir, y_dir;
 
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -77,10 +76,12 @@ public class Activity_Animation_Layout extends View{
 
     }
 
+
+
     public Activity_Animation_Layout(Context context) {
 
         super(context);
-        setBackgroundResource(R.drawable.light_blue_background);
+        //setBackgroundResource(R.drawable.light_blue_background);
 
         moomin_x = 100;
         moomin_y =100;
