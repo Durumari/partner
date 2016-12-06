@@ -19,11 +19,11 @@
         android:textSize="20dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:text="Min-gyu Kim" />
+    <!--<TextView-->
+        <!--android:id="@+id/Username"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingTop="5dp"-->
+        <!--android:text="Min-gyu Kim" />-->
 
 </LinearLayout>

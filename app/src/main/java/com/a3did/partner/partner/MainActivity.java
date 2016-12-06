@@ -243,12 +243,13 @@ public class MainActivity extends RecoRangingActivity
         toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 toolbar.setTitle(mDefaultFragment.mName);
                 mFragmentID = R.layout.fragment_default;
                 getSupportFragmentManager().beginTransaction().replace(R.id.partner_container,mDefaultFragment).commit();
             }
         });
-
+        toolbar.setSubtitle(mUserManager.getCurrentUserName());
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

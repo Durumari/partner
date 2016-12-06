@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import static com.a3did.partner.partner.R.id.textView;
 import static com.a3did.partner.partner.R.id.toolbar;
 
 
@@ -122,6 +120,10 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
         mTextViewReward.setText(""+userInfo.mRewardInfoList.size());
         TextView mTextViewCompleteList = (TextView) view.findViewById(R.id.num_complete);
         mTextViewCompleteList.setText(""+userInfo.mCompletedInfoList.size());
+
+        //TODO: change user info on the menu navigation bar
+//        TextView mTextUsername = (TextView) view.findViewById(R.id.username);
+//        mTextUsername.setText(""+userInfo.mName);
 
         //Checking voice recognition is activated or not
         // red for not activated

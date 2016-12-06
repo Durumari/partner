@@ -13,12 +13,13 @@
 
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
-            app:srcCompat="@drawable/ic_pentagon_made_of_stars"
+            app:srcCompat="@android:drawable/btn_star_big_on"
             android:id="@+id/imageView5"
             android:clickable="true"
             android:layout_alignParentTop="true"
@@ -28,7 +29,6 @@
 
         <TextView
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
