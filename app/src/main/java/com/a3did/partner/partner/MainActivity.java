@@ -90,7 +90,7 @@ public class MainActivity extends RecoRangingActivity
     TextView mRemoteRssiVal;
     RadioGroup mRg;
     private int mState = UART_PROFILE_DISCONNECTED;
-    private UartService mService = null;//new UartService();
+    private UartService mService = null;
     private BluetoothDevice mDevice = null;
     private BluetoothAdapter mBtAdapter = null;
     private ListView messageListView;
@@ -139,7 +139,7 @@ public class MainActivity extends RecoRangingActivity
             finish();
             return;
         }
-        service_init();
+//        service_init();
 
         btnConnectDisconnect=(Button) findViewById(R.id.fab2);
         btnConnectDisconnect.setOnClickListener(new View.OnClickListener() {
@@ -147,16 +147,19 @@ public class MainActivity extends RecoRangingActivity
             public void onClick(View v) {
                 if (!mBtAdapter.isEnabled()) {
                     Log.i(TAG, "onClick - BT not enabled yet");
-                    Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+//                    Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//                    startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
                 }
                 else {
                     if (btnConnectDisconnect.getText().equals("Connect")){
 
                         //Connect button pressed, open DeviceListActivity class, with popup windows that scan for devices
 
-                        Intent newIntent = new Intent(com.a3did.partner.partner.MainActivity.this, DeviceListActivity.class);
-                        startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+//                        Intent newIntent = new Intent(com.a3did.partner.partner.MainActivity.this, DeviceListActivity.class);
+//                        startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+
+                        String deviceAddress = "DB:E7:DF:00:57:83";
+                        mService.connect(deviceAddress);
                     } else {
                         //Disconnect button pressed
                         if (mDevice!=null)
@@ -168,7 +171,6 @@ public class MainActivity extends RecoRangingActivity
                 }
             }
         });
-
 
 
         //User Management Instance
@@ -415,6 +417,7 @@ public class MainActivity extends RecoRangingActivity
         drawer.closeDrawer(GravityCompat.START);
         return;
     }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -566,7 +569,11 @@ public class MainActivity extends RecoRangingActivity
      }
 
 
-    //UART service connected/disconnected
+
+
+    /* ******************************************************************************
+     * UART service connected/disconnected
+     * ****************************************************************************** */
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder rawBinder) {
             mService = ((UartService.LocalBinder) rawBinder).getService();
@@ -598,11 +605,6 @@ public class MainActivity extends RecoRangingActivity
                         String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                         Log.d(TAG, "UART_CONNECT_MSG");
                         btnConnectDisconnect.setText("Disconnect");
-//                        edtMessage.setEnabled(true);
-//                        btnSend.setEnabled(true);
-//                        ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName()+ " - ready");
-//                        listAdapter.add("["+currentDateTimeString+"] Connected to: "+ mDevice.getName());
-  //                      messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
                         mState = UART_PROFILE_CONNECTED;
                     }
                 });
@@ -614,11 +616,7 @@ public class MainActivity extends RecoRangingActivity
                     public void run() {
                         String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                         Log.d(TAG, "UART_DISCONNECT_MSG");
-//                        btnConnectDisconnect.setText("Connect");
-//                        edtMessage.setEnabled(false);
-//                        btnSend.setEnabled(false);
-//                        ((TextView) findViewById(R.id.deviceName)).setText("Not Connected");
- //                       listAdapter.add("["+currentDateTimeString+"] Disconnected to: "+ mDevice.getName());
+
                         mState = UART_PROFILE_DISCONNECTED;
                         mService.close();
                         //setUiState();
@@ -643,9 +641,6 @@ public class MainActivity extends RecoRangingActivity
                             Log.d("part", "jh : " + txValue +"");
                             String text = new String(txValue, "UTF-8");
                             String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
-       //                     listAdapter.add("["+currentDateTimeString+"] RX: " + new java.math.BigInteger(txValue).toString(16));
-       //f                     messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
-
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
                         }
@@ -663,12 +658,6 @@ public class MainActivity extends RecoRangingActivity
     };
 
 
-    private void service_init() {
-        Intent bindIntent = new Intent(this, UartService.class);
-        bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
-    }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
@@ -680,12 +669,15 @@ public class MainActivity extends RecoRangingActivity
         return intentFilter;
     }
 
-
-
+    /* ******************************************************************************
+     * ****************************************************************************** */
 
     @Override
     public void onStart() {
         super.onStart();
+        Intent bindIntent = new Intent(this, UartService.class);
+        bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
     }
 
     @Override
@@ -754,48 +746,6 @@ public class MainActivity extends RecoRangingActivity
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-    }
-
-
-
-
-
-
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-
-            case REQUEST_SELECT_DEVICE:
-                //When the DeviceListActivity return, with the selected device address
-                if (resultCode == Activity.RESULT_OK && data != null) {
-                    String deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
-                    mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
-
-                    Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
-                    //((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName()+ " - connecting");
-                    mService.connect(deviceAddress);
-
-
-                }
-                break;
-            case REQUEST_ENABLE_BT:
-                // When the request to enable Bluetooth returns
-                if (resultCode == Activity.RESULT_OK) {
-                    Toast.makeText(this, "Bluetooth has turned on ", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    // User did not enable Bluetooth or an error occurred
-                    Log.d(TAG, "BT not enabled");
-                    Toast.makeText(this, "Problem in BT Turning ON ", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                break;
-            default:
-                Log.e(TAG, "wrong request code");
-                break;
-        }
     }
 
 
