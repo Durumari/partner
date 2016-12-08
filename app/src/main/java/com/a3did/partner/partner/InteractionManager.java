@@ -2,6 +2,7 @@ package com.a3did.partner.partner;
 
 import android.os.Environment;
 import android.os.Message;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 
@@ -36,7 +37,7 @@ public class InteractionManager {
     private static SpeechConfig SPEECH_CONFIG = SpeechConfig.OPENAPI_KR; // or SpeechConfig.OPENAPI_EN
 
     private MainActivity.RecognitionHandler handler;
-
+    private MainActivity.HapticHandler mHapticHandler;
 
     public enum MenuType{
         DEFAULT,
@@ -65,6 +66,7 @@ public class InteractionManager {
 
         handler = new MainActivity.RecognitionHandler(activity);
         mNaverRecognizer = new NaverRecognizer(activity, handler, CLIENT_ID, SPEECH_CONFIG);
+        mHapticHandler = new MainActivity.HapticHandler(activity);
 
 
         //Recognizer setting
@@ -72,6 +74,9 @@ public class InteractionManager {
         ttsClient = tts;
         mActivity = activity;
         setVoiceRecoReady(true);
+    }
+    public MainActivity.HapticHandler getHaptic(){
+        return mHapticHandler;
     }
 
     public static InteractionManager getInstance(){
@@ -387,6 +392,19 @@ public class InteractionManager {
 
     public void handlehapticMessage(Message msg) {
         switch (msg.what) {
+            case 1:
+                Log.d("HANDLER","input is present");
+//                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+                break;
+            case 2:
+                Log.d("HANDLER","no input present");
+                break;
+            case 3:
+                break;
+            default:
+                break;
+
 
         }
     }

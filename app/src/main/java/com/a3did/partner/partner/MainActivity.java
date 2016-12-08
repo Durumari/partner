@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -460,6 +461,23 @@ public class MainActivity extends RecoRangingActivity
             }
         }
     }
+//     Declare handler for handling SpeechRecognizer thread's Messages.
+    static class HapticHandler extends Handler {
+        private final WeakReference<MainActivity> mActivity;
+
+        HapticHandler(MainActivity activity) {
+            mActivity = new WeakReference<MainActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            MainActivity activity = mActivity.get();
+            if (activity != null && !activity.isOnPause) {
+
+                activity.mInteractionManager.handlehapticMessage(msg);
+            }
+        }
+    }
 
 
     //////////////////////////////Newton talk Listener//////
@@ -639,7 +657,19 @@ public class MainActivity extends RecoRangingActivity
                     public void run() {
                         try {
                             Log.d("part", "jh : " + txValue +"");
+
+                            Message msg = mInteractionManager.getHaptic().obtainMessage();
+
                             String text = new String(txValue, "UTF-8");
+                            if (text == null){
+                                msg.what = 2;
+                            }else{
+                                msg.what = 1;
+                                msg.obj = txValue;
+                                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                                v.vibrate(300);
+                            }
+                            mInteractionManager.getHaptic().sendMessage(msg);
                             String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                         } catch (Exception e) {
                             Log.e(TAG, e.toString());
