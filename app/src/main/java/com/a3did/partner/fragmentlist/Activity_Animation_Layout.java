@@ -142,13 +142,13 @@ public class Activity_Animation_Layout extends View implements View.OnTouchListe
                 int data = random.nextInt(4);
                 switch (data){
                     case 0:
-                        manager.ttsClient.play("일정 리스트를 보고 싶으시면, 파트너 일정 리스트 좀 보여줘, 라고 말해볼래요?");
+                        manager.ttsClient.play("일정 리스트를 보고 싶으시면, 파트너, 일정 리스트 좀 보여줘, 라고 말해볼래요?");
                         break;
                     case 1:
-                        manager.ttsClient.play("목표 리스트를 보고 싶으시면, 파트너 목표 리스트 좀 보여줘, 라고 말해볼래요?");
+                        manager.ttsClient.play("목표 리스트를 보고 싶으시면, 파트너, 목표 리스트 좀 보여줘, 라고 말해볼래요?");
                         break;
                     case 2:
-                        manager.ttsClient.play("보상 리스트를 보고 싶으시면, 파트너 보상 리스트 좀 보여줘, 라고 말해볼래요?");
+                        manager.ttsClient.play("보상 리스트를 보고 싶으시면, 파트너, 보상 리스트 좀 보여줘, 라고 말해볼래요?");
                         break;
                     case 3:
                         break;
