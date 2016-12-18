@@ -64,9 +64,15 @@ public class InteractionManager {
         MISSED
     };
 
+
     public MenuType mSystemMode;
     public int mDetailMode;
+    public static InteractionManager getInstance(){
+        if(mInstance == null)
+            mInstance = new InteractionManager();
 
+        return mInstance;
+    }
     private InteractionManager(){
         ttsClient = null;
         mNaverRecognizer = null;
@@ -93,7 +99,7 @@ public class InteractionManager {
 
 
         //Recognizer setting
-        mNaverRecognizer.recognize();
+        //mNaverRecognizer.recognize();
         ttsClient = tts;
         mActivity = activity;
         setVoiceRecoReady(true);
@@ -102,12 +108,7 @@ public class InteractionManager {
         return mHapticHandler;
     }
 
-    public static InteractionManager getInstance(){
-        if(mInstance == null)
-            mInstance = new InteractionManager();
 
-        return mInstance;
-    }
 
     public void sendBeaconData(Collection<RECOBeacon> beacons){
 
@@ -201,7 +202,8 @@ public class InteractionManager {
 
                             Log.d("Partner","re-connect Recognizer");
                             //if()
-                            mNaverRecognizer.recognize();
+                            if(!mNaverRecognizer.getSpeechRecognizer().isRunning())
+                                mNaverRecognizer.recognize();
 
 
                         }
@@ -219,6 +221,8 @@ public class InteractionManager {
 
     //Check SystemMode
     boolean checkSystemMode(){
+        if(mResult.contains("보고 싶으시면"))
+            return false;
         if(mResult.contains("파트너")) {
             if (mResult.contains("일정")) {
                 ttsClient.play("네 일정 보여드릴게요.");

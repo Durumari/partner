@@ -16,10 +16,10 @@ class NaverRecognizer implements SpeechRecognitionListener {
 
 	private Handler mHandler;
 	private SpeechRecognizer mRecognizer;
-
-	public NaverRecognizer(Activity activity, Handler handler, String clientId, SpeechConfig config) {
+	private MainActivity mActivity;
+	public NaverRecognizer(MainActivity activity, Handler handler, String clientId, SpeechConfig config) {
 		this.mHandler = handler;
-
+		mActivity = activity;
 		try {
 			mRecognizer = new SpeechRecognizer(activity, clientId, config);
 		} catch (SpeechRecognitionException e) {
@@ -58,6 +58,7 @@ class NaverRecognizer implements SpeechRecognitionListener {
 	public void onInactive() {
 		Log.d(TAG, "Event occurred : Inactive");
 		Message msg = Message.obtain(mHandler, R.id.clientInactive);
+
 		msg.sendToTarget();
 
 	}
@@ -65,22 +66,29 @@ class NaverRecognizer implements SpeechRecognitionListener {
 	@Override
 	public void onReady() {
 		Log.d(TAG, "Event occurred : Ready");
-		Message msg = Message.obtain(mHandler, R.id.clientReady);
-		msg.sendToTarget();
+		if(!mActivity.isOnPause){
+			Message msg = Message.obtain(mHandler, R.id.clientReady);
+			msg.sendToTarget();
+		}
+
 	}
 
 	@Override
 	public void onRecord(short[] speech) {
 		Log.d(TAG, "Event occurred : Record");
-		Message msg = Message.obtain(mHandler, R.id.audioRecording, speech);
-		msg.sendToTarget();
+		if(!mActivity.isOnPause) {
+			Message msg = Message.obtain(mHandler, R.id.audioRecording, speech);
+			msg.sendToTarget();
+		}
 	}
 
 	@Override
 	public void onPartitialResult(String result) {
 		Log.d(TAG, "Partial Result!! (" + result + ")");
-		Message msg = Message.obtain(mHandler, R.id.partialResult, result);
-		msg.sendToTarget();
+		if(!mActivity.isOnPause) {
+			Message msg = Message.obtain(mHandler, R.id.partialResult, result);
+			msg.sendToTarget();
+		}
 	}
 
 	@Override
@@ -91,13 +99,17 @@ class NaverRecognizer implements SpeechRecognitionListener {
 	@Override
 	public void onResult(Object[] result) {
 		Log.d(TAG, "Final Result!! (" + result[0] + ")");
-		Message msg = Message.obtain(mHandler, R.id.finalResult, result);
-		msg.sendToTarget();
+		if(!mActivity.isOnPause) {
+			Message msg = Message.obtain(mHandler, R.id.finalResult, result);
+			msg.sendToTarget();
+		}
 	}
 
 	@Override
 	public void onError(int errorCode) {
-		Message msg = Message.obtain(mHandler, R.id.recognitionError, errorCode);
-		msg.sendToTarget();
+		if(!mActivity.isOnPause) {
+			Message msg = Message.obtain(mHandler, R.id.recognitionError, errorCode);
+			msg.sendToTarget();
+		}
 	}
 }

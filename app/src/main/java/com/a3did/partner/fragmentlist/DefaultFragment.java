@@ -105,7 +105,7 @@ public class DefaultFragment extends android.support.v4.app.Fragment {
         UserManager userManager = UserManager.getInstance();
         PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
         if(userInfo != null){
-            Log.d("ERROR", "no user info");
+            //Log.d("ERROR", "no user info");
             mListAdapter.setList(userInfo.mRewardInfoList);
         }
 

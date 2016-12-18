@@ -9,19 +9,23 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.a3did.partner.partner.InteractionManager;
+import com.a3did.partner.partner.MainActivity;
 import com.a3did.partner.partner.R;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Random;
 
 /**
  * Created by edward on 12/4/2016.
  */
 
-public class Activity_Animation_Layout extends View{
+public class Activity_Animation_Layout extends View implements View.OnTouchListener{
 
     Bitmap moominbm;
     Bitmap moomin_image[];
@@ -122,7 +126,50 @@ public class Activity_Animation_Layout extends View{
         moomin_y =100;
         x_dir = 5;
         y_dir = 5;
-
+        setOnTouchListener(this);
     }
 
+
+
+    public boolean pointInRect(int x, int y){
+        if(moomin_x <= x && moomin_x + moomin_w >= x && moomin_y <= y && moomin_y + moomin_h >= y){
+            //clicked moomin image
+            Log.d("test", "touch moomin");
+            InteractionManager manager = InteractionManager.getInstance();
+            Random random = new Random();
+            if(!manager.ttsClient.isPlaying()){
+                random.setSeed(System.currentTimeMillis());
+                int data = random.nextInt(4);
+                switch (data){
+                    case 0:
+                        manager.ttsClient.play("일정 리스트를 보고 싶으시면, 파트너, 일정 리스트 좀 보여줘, 라고 말해볼래요?");
+                        break;
+                    case 1:
+                        manager.ttsClient.play("목표 리스트를 보고 싶으시면, 파트너, 목표 리스트 좀 보여줘, 라고 말해볼래요?");
+                        break;
+                    case 2:
+                        manager.ttsClient.play("보상 리스트를 보고 싶으시면, 파트너, 보상 리스트 좀 보여줘, 라고 말해볼래요?");
+                        break;
+                    case 3:
+                        manager.ttsClient.play("저를 눌러 보시면, 사용법을 알려드려요~");
+                        break;
+                    case 4:
+                        manager.ttsClient.play("반가워요~");
+                        break;
+                }
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+
+            return pointInRect((int)motionEvent.getX(), (int)motionEvent.getY());
+        }
+        return false;
+    }
 }
