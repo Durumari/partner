@@ -53,6 +53,7 @@ public class InteractionManager {
     private MainActivity.HapticHandler mHapticHandler;
     public ArrayList<String> defaultSpeech = new ArrayList<String>();;
     private int hapticpress = 0;
+    private int hapticpress2 = 0;
     public enum MenuType{
         DEFAULT,
         ASSISTANT,
@@ -377,6 +378,11 @@ public class InteractionManager {
 //                ttsClient.play("가이드를 말씀드릴게요. " + data.get(mDetailMode - 1).getGuideList().get(0));
 //            }
         }
+        else if (mResult.contains("완료")){
+            ttsClient.play("손을 만져줘");
+            hapticpress2 = 1;
+
+        }
     }
     //Safery Action
     private void SaferyAction(){
@@ -448,9 +454,33 @@ public class InteractionManager {
 
 
                     ArrayList<AssistantListData> data = UserManager.getInstance().getCurrentUserInfo().mScheduleInfoList;
+                    Log.d("handler", "number of data"+data.size());
+                    for (int i = 0 ; i < data.size(); i++){
+                        // TODO:Check what is done and output index
+//                        data.
+//                        mResult.contain(data.get(i));
+                    }
+                    //int idx = 1 ;//= data.indexOf();
+                    mAssistantFrag.moveDataToCompletedList(1);
+                    hapticpress = 0;
 
-                    int idx = 1 ;//= data.indexOf();
-                    mAssistantFrag.moveDataToCompletedList(idx);
+                }
+
+                if(hapticpress2== 1&& mDetailMode ==0 ){
+                    ttsClient.play("목표 완료를 체크하였습니다.");
+
+
+
+                    ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
+                    Log.d("handler", "number of data"+data.size());
+                    for (int i = 0 ; i < data.size(); i++){
+                        // TODO:Check what is done and output index
+//                        data.
+//                                mResult.contain(data.get(i));
+                    }
+                    //int idx = 1 ;//= data.indexOf();
+                    mAchievementFrag.moveDataToCompletedList(1);
+
                     hapticpress = 0;
 
                 }
