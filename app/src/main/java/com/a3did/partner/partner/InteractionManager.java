@@ -3,6 +3,7 @@ package com.a3did.partner.partner;
 import android.os.Environment;
 import android.os.Message;
 import android.os.Vibrator;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
@@ -36,10 +37,12 @@ import static android.R.id.list;
 public class InteractionManager {
 
 
-    AssistantFragment mAssistantFrag = new AssistantFragment();;
-    AchievementFragment mAchievementFrag;
+//    AssistantFragment mAssistantFrag;
+//    AchievementFragment mAchievementFrag;
 
     private static InteractionManager mInstance;
+    private long prevtime = 0;
+    private long currenttime = 0;
 
     public TextToSpeechClient ttsClient;
     public MainActivity mActivity;
@@ -48,10 +51,10 @@ public class InteractionManager {
     private AudioWriterPCM writer;
     private static String CLIENT_ID = "8_h3SjFEfYR7rygZLHz4"; // "내 애플리케이션"에서 Client ID를 확인해서 이곳에 적어주세요.
     private static SpeechConfig SPEECH_CONFIG = SpeechConfig.OPENAPI_KR; // or SpeechConfig.OPENAPI_EN
-
     private MainActivity.RecognitionHandler handler;
     private MainActivity.HapticHandler mHapticHandler;
-    public ArrayList<String> defaultSpeech = new ArrayList<String>();;
+    public ArrayList<String> defaultSpeech = new ArrayList<String>();
+    private int hapticinputcount = 0;
     private int hapticpress = 0;
     private int hapticpress2 = 0;
     public enum MenuType{
@@ -104,6 +107,9 @@ public class InteractionManager {
         ttsClient = tts;
         mActivity = activity;
         setVoiceRecoReady(true);
+
+
+
     }
     public MainActivity.HapticHandler getHaptic(){
         return mHapticHandler;
@@ -434,58 +440,73 @@ public class InteractionManager {
     public void handlehapticMessage(Message msg) {
         switch (msg.what) {
             case 1:
-                Log.d("HANDLER","input is present");
-                if(hapticpress == 0 &&mDetailMode==0){
-                    Random randomGenerator = new Random();
-                    int randomInt = randomGenerator.nextInt(4);
-                    String randspeech = defaultSpeech.get(randomInt);
-                    ttsClient.play(randspeech);
-                }else if(hapticpress == 0 && mDetailMode>0){
-                    ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
-                    if(data.size() >= mDetailMode){
-                        ttsClient.play("가이드를 말씀드릴게요. " + data.get(mDetailMode - 1).getGuideList().get(0));
+                currenttime = System.currentTimeMillis();
+                if (currenttime - prevtime > 10000 ) {
+                    Log.d("HANDLER", "input is present");
+                    if (hapticpress == 0 && mDetailMode == 0) {
+                        Random randomGenerator = new Random();
+                        int randomInt = randomGenerator.nextInt(4);
+                        String randspeech = defaultSpeech.get(randomInt);
+                        ttsClient.play(randspeech);
+                    } else if (hapticpress == 0 && mDetailMode > 0) {
+                        ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
+                        if (data.size() >= mDetailMode) {
+                            ttsClient.play("가이드를 말씀드릴게요. " + data.get(mDetailMode - 1).getGuideList().get(0));
+                        }
+                        mDetailMode = 0;
                     }
-                    mDetailMode = 0;
-                }
 
-                if(hapticpress == 1 && mDetailMode==0 ){
-                    ttsClient.play("일정 완료를 체크하였습니다.");
+                    if (hapticpress == 1 && mDetailMode == 0) {
+                        ttsClient.play("일정 완료를 체크하였습니다.");
 
+                        AssistantFragment assistant = (AssistantFragment) mActivity.getSupportFragmentManager().findFragmentById(R.id.partner_container);
+                        if (assistant != null) {
+                            Log.d("test", "assistant getget");
+                            assistant.moveDataToCompletedList(0);
+                        }
 
-
-                    ArrayList<AssistantListData> data = UserManager.getInstance().getCurrentUserInfo().mScheduleInfoList;
-                    Log.d("handler", "number of data"+data.size());
-                    for (int i = 0 ; i < data.size(); i++){
-                        // TODO:Check what is done and output index
+                        ArrayList<AssistantListData> data = UserManager.getInstance().getCurrentUserInfo().mScheduleInfoList;
+                        Log.d("handler", "number of data" + data.size());
+                        for (int i = 0; i < data.size(); i++) {
+                            // TODO:Check what is done and output index
 //                        data.
 //                        mResult.contain(data.get(i));
+                        }
+                        //int idx = 1 ;//= data.indexOf();
+                        assistant.moveDataToCompletedList(1);
+                        hapticpress = 0;
+
                     }
-                    //int idx = 1 ;//= data.indexOf();
-                    mAssistantFrag.moveDataToCompletedList(1);
-                    hapticpress = 0;
 
-                }
-
-                if(hapticpress2== 1&& mDetailMode ==0 ){
-                    ttsClient.play("목표 완료를 체크하였습니다.");
+                    if (hapticpress2 == 1 && mDetailMode == 0) {
+                        ttsClient.play("목표 완료를 체크하였습니다.");
 
 
+                        AchievementFragment achievement = (AchievementFragment) mActivity.getSupportFragmentManager().findFragmentById(R.id.partner_container);
+                        if (achievement != null) {
+                            Log.d("test", "assistant getget");
+                            achievement.moveDataToCompletedList(0);
+                        }
 
-                    ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
-                    Log.d("handler", "number of data"+data.size());
-                    for (int i = 0 ; i < data.size(); i++){
-                        // TODO:Check what is done and output index
+                        ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
+                        Log.d("handler", "number of data" + data.size());
+                        for (int i = 0; i < data.size(); i++) {
+                            // TODO:Check what is done and output index
 //                        data.
 //                                mResult.contain(data.get(i));
+                        }
+                        //int idx = 1 ;//= data.indexOf();
+                        achievement.moveDataToCompletedList(1);
+
+                        hapticpress2 = 0;
+
                     }
-                    //int idx = 1 ;//= data.indexOf();
-                    mAchievementFrag.moveDataToCompletedList(1);
 
-                    hapticpress = 0;
+                    prevtime = currenttime;
 
+                    Log.d("time", "prevtime:"+ prevtime);
                 }
                 break;
-
             case 2:
                 Log.d("HANDLER","no input present");
                 break;

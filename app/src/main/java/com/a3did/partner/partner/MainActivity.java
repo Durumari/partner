@@ -64,6 +64,7 @@ import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends RecoRangingActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -78,6 +79,9 @@ public class MainActivity extends RecoRangingActivity
 {
 
 
+
+    private long prevtime = 0;
+    private long currenttime = 0;
     ////////////
 
     private static final int REQUEST_SELECT_DEVICE = 1;
@@ -646,7 +650,29 @@ public class MainActivity extends RecoRangingActivity
                 });
             }
 
-
+//            currCount = System.currentTimeMillis();
+//            if(currCount - prevCount < 2000 ) {
+//                enableHaptic = false;
+//            }
+//            else{
+//                enableHaptic = true;
+//            }
+//
+//            if(enableHaptic){
+//                runOnUiThread(new Runnable() {
+//                    public void run() {
+//                        try {
+//                            Log.d("part", "jh : " + txValue +"");
+//                            String text = new String(txValue, "UTF-8");
+//                            String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+//                        } catch (Exception e) {
+//                            Log.e(TAG, e.toString());
+//                        }
+//                    }
+//                });
+//            }
+//
+//            prevCount = currCount;
             //*********************//
             if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
                 mService.enableTXNotification();
@@ -656,29 +682,34 @@ public class MainActivity extends RecoRangingActivity
 
                 final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
 
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            Log.d("part", "jh : " + txValue +"");
+//                currenttime = System.currentTimeMillis();
+//                if (currenttime - prevtime > 20000 ) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            try {
+                                Log.d("part", "jh : " + txValue + "");
 
-                            Message msg = mInteractionManager.getHaptic().obtainMessage();
+                                Message msg = mInteractionManager.getHaptic().obtainMessage();
 
-                            String text = new String(txValue, "UTF-8");
-                            if (text == null){
-                                msg.what = 2;
-                            }else{
+                                String text = new String(txValue, "UTF-8");
                                 msg.what = 1;
                                 msg.obj = txValue;
                                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                                 v.vibrate(300);
+                               // mInteractionManager.getHaptic().sendMessage(msg);
+                                //mInteractionManager.getHaptic().sendMessage(msg);
+                                mInteractionManager.handlehapticMessage(msg);
+                                Log.d("TIMEERROR", "");
+                            } catch (Exception e) {
+                                Log.e(TAG, e.toString());
                             }
-                            mInteractionManager.getHaptic().sendMessage(msg);
-                            String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
-                        } catch (Exception e) {
-                            Log.e(TAG, e.toString());
                         }
-                    }
-                });
+                    });
+
+//                    prevtime = currenttime;
+//
+//                    Log.d("time", "prevtime:"+ prevtime);
+//                }
             }
             //*********************//
             if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)){
