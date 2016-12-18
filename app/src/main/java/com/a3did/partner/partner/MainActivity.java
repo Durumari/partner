@@ -118,10 +118,10 @@ public class MainActivity extends RecoRangingActivity
 
     public static final String DAUM_KEY = "3d03690d5e27935dc3be9bb14c52ee98";
 
-    //private NaverRecognizer mNaverRecognizer;
+    private NaverRecognizer mNaverRecognizer;
     private String mResult;
     private AudioWriterPCM writer;
-        public static TextToSpeechClient ttsClient;
+    public static TextToSpeechClient ttsClient;
     public UserManager mUserManager;
 
     @Override
@@ -290,6 +290,11 @@ public class MainActivity extends RecoRangingActivity
                 //DialogHtmlView(title);
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
+
+                if(!mInteractionManager.mNaverRecognizer.getSpeechRecognizer().isRunning())
+                    mInteractionManager.mNaverRecognizer.recognize();
+                else
+                    mInteractionManager.mNaverRecognizer.getSpeechRecognizer().stop();;
             }
         });
 
@@ -310,7 +315,6 @@ public class MainActivity extends RecoRangingActivity
 
 //        TextView titleTextView = (TextView) findViewById(R.id.default_star_num) ;
 //        titleTextView.setText(mUserManager.getCurrentUserInfo().mStarNumber);
-
 
 
 
@@ -536,12 +540,11 @@ public class MainActivity extends RecoRangingActivity
      public void didRangeBeaconsInRegion(Collection<RECOBeacon> recoBeacons, RECOBeaconRegion recoRegion) {
          Log.i("RECORangingActivity", "didRangeBeaconsInRegion() region: " + recoRegion.getUniqueIdentifier() + ", number of beacons ranged: " + recoBeacons.size());
 
-         InteractionManager interactionManager = InteractionManager.getInstance();
 
 
          if(recoBeacons.size() != 0)
          {
-             interactionManager.sendBeaconData(recoBeacons);
+             mInteractionManager.sendBeaconData(recoBeacons);
              RECOBeacon beco = recoBeacons.iterator().next();
              Log.d("test", beco.getProximityUuid());
              PartnerUserInfo info = mUserManager.getCurrentUserInfo();
@@ -678,6 +681,10 @@ public class MainActivity extends RecoRangingActivity
         Intent bindIntent = new Intent(this, UartService.class);
         bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
         LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
+        if(mInteractionManager.mNaverRecognizer != null && mInteractionManager.mNaverRecognizer.getSpeechRecognizer() != null) {
+            Log.d(TAG, "onStart");
+            mInteractionManager.mNaverRecognizer.getSpeechRecognizer().initialize();
+        }
     }
 
     @Override
@@ -703,20 +710,24 @@ public class MainActivity extends RecoRangingActivity
     protected void onStop() {
         Log.d(TAG, "onStop");
         super.onStop();
+        if(mInteractionManager.mNaverRecognizer != null && mInteractionManager.mNaverRecognizer.getSpeechRecognizer() != null) {
+            Log.d(TAG, "onStop1");
+            mInteractionManager.mNaverRecognizer.getSpeechRecognizer().release();
+        }
     }
 
     @Override
     protected void onPause() {
 
-        isOnPause = true;
-        if(mInteractionManager.mNaverRecognizer != null && mInteractionManager.mNaverRecognizer.getSpeechRecognizer() != null) {
-            Log.d(TAG, "onPause");
-            mInteractionManager.mNaverRecognizer.getSpeechRecognizer().stopImmediately();
-            mInteractionManager.mNaverRecognizer.getSpeechRecognizer().release();
-        }
+
 
         Log.d(TAG, "onPause");
         super.onPause();
+        isOnPause = true;
+        if(mInteractionManager.mNaverRecognizer != null && mInteractionManager.mNaverRecognizer.getSpeechRecognizer() != null) {
+            Log.d(TAG, "onPause1");
+            mInteractionManager.mNaverRecognizer.getSpeechRecognizer().stopImmediately();
+        }
     }
 
     @Override
@@ -729,10 +740,7 @@ public class MainActivity extends RecoRangingActivity
     public void onResume() {
         super.onResume();
         isOnPause = false;
-        if(mInteractionManager.mNaverRecognizer != null && mInteractionManager.mNaverRecognizer.getSpeechRecognizer() != null) {
-            Log.d(TAG, "onResume1");
-            mInteractionManager.mNaverRecognizer.getSpeechRecognizer().initialize();
-        }
+
         Log.d(TAG, "onResume");
         if (!mBtAdapter.isEnabled()) {
             Log.i(TAG, "onResume - BT not enabled yet");
@@ -742,7 +750,6 @@ public class MainActivity extends RecoRangingActivity
         }
 
     }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
