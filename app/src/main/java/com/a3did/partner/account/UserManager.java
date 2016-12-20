@@ -106,8 +106,8 @@ public class UserManager {
         //achievement
         AchievementListData achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
-                "수학 시험 100점 맞기", 10, "11월 19일 오후 3시", "12월 20일 오후 3시");
-        achievementlistData.addGuide("선생님이 내주신 숙제만 잘하면 돼요");
+                "강아지 목욕시켜주기", 1, "11월 20일 오후 8시", "11월 20일 오후 9시");
+        achievementlistData.addGuide("따뜻한 물을 미리 받아 놓아요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         achievementlistData = new AchievementListData();
@@ -129,8 +129,8 @@ public class UserManager {
 
         achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
-                "강아지 목욕시켜주기", 1, "11월 20일 오후 8시", "11월 20일 오후 9시");
-        achievementlistData.addGuide("따뜻한 물을 미리 받아 놓아요");
+                "수학 시험 100점 맞기", 10, "11월 19일 오후 3시", "12월 20일 오후 3시");
+        achievementlistData.addGuide("선생님이 내주신 숙제만 잘하면 돼요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         //reward
