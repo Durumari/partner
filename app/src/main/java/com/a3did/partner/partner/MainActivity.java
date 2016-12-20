@@ -41,6 +41,8 @@ import android.widget.Toast;
 
 import com.a3did.partner.account.PartnerUserInfo;
 import com.a3did.partner.account.UserManager;
+import com.a3did.partner.adapterlist.AchievementListData;
+import com.a3did.partner.adapterlist.AssistantListData;
 import com.a3did.partner.fragmentlist.AccountFragment;
 import com.a3did.partner.fragmentlist.AchievementFragment;
 import com.a3did.partner.fragmentlist.AssistantFragment;
@@ -62,6 +64,7 @@ import net.daum.mf.speech.api.TextToSpeechManager;
 
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -177,6 +180,8 @@ public class MainActivity extends RecoRangingActivity
             }
         });
 
+        btnConnectDisconnect.setVisibility(View.INVISIBLE);
+
 
         //User Management Instance
         mUserManager = UserManager.getInstance();
@@ -266,12 +271,32 @@ public class MainActivity extends RecoRangingActivity
                 {
                     case R.layout.fragment_default:
                         title = "Partner";
+
+
                         break;
                     case R.layout.fragment_assistant:
                         title = "Assistant";
+                        ArrayList<AssistantListData> list = mUserManager.getCurrentUserInfo().mScheduleInfoList;
+                        if(list.size() != 0){
+                            AssistantListData data = list.get(0);
+                            if(!ttsClient.isPlaying()){
+                                ttsClient.play("지금, " + data.getTitle() + ",를 해야 할 시간이예요");
+                                //mInteractionManager.hapticpress = 1;
+                            }
+                        }
+
+
                         break;
                     case R.layout.fragment_achievement:
                         title = "Achievement";
+                        ArrayList<AchievementListData> list1 = mUserManager.getCurrentUserInfo().mAchievementInfoList;
+                        if(list1.size() != 0){
+                            AchievementListData data = list1.get(0);
+                            if(!ttsClient.isPlaying()){
+                                ttsClient.play("혹시, " + data.getTitle() + ",를 다 하셨나요?");
+                                //mInteractionManager.hapticpress2 = 1;
+                            }
+                        }
                         break;
                     case R.layout.fragment_safety:
                         title = "Safety";

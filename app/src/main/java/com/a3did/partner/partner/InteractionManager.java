@@ -55,8 +55,8 @@ public class InteractionManager {
     private MainActivity.HapticHandler mHapticHandler;
     public ArrayList<String> defaultSpeech = new ArrayList<String>();
     private int hapticinputcount = 0;
-    private int hapticpress = 0;
-    private int hapticpress2 = 0;
+    public int hapticpress = 0;
+    public int hapticpress2 = 0;
     public enum MenuType{
         DEFAULT,
         ASSISTANT,
@@ -310,8 +310,8 @@ public class InteractionManager {
                 ttsClient.play(talk+ "총 " + data.size() + "개의 일정이 있어요");
             }
         }
-        else if (mResult.contains("완료")){
-            ttsClient.play("손을 만져줘");
+        else if (mResult.contains("확인")){
+            ttsClient.play("손을 만져주세요");
             hapticpress = 1;
 
         }
@@ -385,7 +385,7 @@ public class InteractionManager {
 //            }
         }
         else if (mResult.contains("완료")){
-            ttsClient.play("손을 만져줘");
+            ttsClient.play("손을 만져주세요");
             hapticpress2 = 1;
 
         }
