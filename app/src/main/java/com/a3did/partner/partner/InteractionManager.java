@@ -84,13 +84,12 @@ public class InteractionManager {
         mIsRecognizerReady = false;
         mSystemMode = MenuType.DEFAULT;
         mDetailMode = 0;
-        defaultSpeech.add("안녕");
-//        defaultSpeech.add("오늘 하루 어땠어?");
-//        defaultSpeech.add("뭐 같이 해볼까?");
-//        defaultSpeech.add("궁금한거 있어?");
-        defaultSpeech.add("오늘 뭐 해야하는지 물어봐죠");
-        defaultSpeech.add("목표는 달성 했어?");
-        defaultSpeech.add("어떤 선물이 있어?");
+        defaultSpeech.add("안녕하세요, 저는 파트너입니다");
+        defaultSpeech.add("저한테 물어보기전에 파트너라고 앞에 먼저 불러주세요");
+        defaultSpeech.add("궁금한게 있으면, 목표, 일정, 보상 에 대해서 물어봐주세요");
+        defaultSpeech.add("오늘 일정 물어봐요");
+        defaultSpeech.add("목표가 어떤게 있는지 확인하려면, 파트너, 목표 리스트 좀 보여줘, 라고 말해주세요");
+        defaultSpeech.add("어떤 선물이 있는 지 궁금하신가요? 파트너, 보상 리스트 좀 보여줘, 라고 말해주세요");
 
 
     }
@@ -311,7 +310,7 @@ public class InteractionManager {
             }
         }
         else if (mResult.contains("완료")){
-            ttsClient.play("손을 만져줘");
+            ttsClient.play("손을 만져 주세요");
             hapticpress = 1;
 
         }
@@ -357,35 +356,19 @@ public class InteractionManager {
             ttsClient.play("제 앞으로 와서, 손을 눌러주세요.");
             mDetailMode = 1;
 
-//            ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
-//            if(data.size() >= mDetailMode){
-//
-//            }
-
         }else if(mResult.contains("두번째 목표 가이드") ){
-            //ttsClient.play("제 앞으로 와서, 손을 눌러주세요.");
             mDetailMode = 2;
-//            ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
-//            if(data.size() >= mDetailMode){
-//                ttsClient.play("가이드를 말씀드릴게요. " + data.get(mDetailMode - 1).getGuideList().get(0));
-//            }
+
         }else if(mResult.contains("세번째 목표 가이드") ){
-            //ttsClient.play("제 앞으로 와서, 손을 눌러주세요.");
-//            mDetailMode = 3;
-//            ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
-//            if(data.size() >= mDetailMode){
-//                ttsClient.play("가이드를 말씀드릴게요. " + data.get(mDetailMode - 1).getGuideList().get(0));
-//            }
+            mDetailMode = 3;
+
         }else if(mResult.contains("네번째 목표 가이드") ){
             //ttsClient.play("제 앞으로 와서, 손을 눌러주세요.");
             mDetailMode = 4;
-//            ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
-//            if(data.size() >= mDetailMode){
-//                ttsClient.play("가이드를 말씀드릴게요. " + data.get(mDetailMode - 1).getGuideList().get(0));
-//            }
+
         }
         else if (mResult.contains("완료")){
-            ttsClient.play("손을 만져줘");
+            ttsClient.play("손을 만져 주세요");
             hapticpress2 = 1;
 
         }
@@ -443,12 +426,12 @@ public class InteractionManager {
                 currenttime = System.currentTimeMillis();
                 if (currenttime - prevtime > 10000 ) {
                     Log.d("HANDLER", "input is present");
-                    if (hapticpress == 0 && mDetailMode == 0) {
+                    if (hapticpress == 0 && hapticpress2 == 0 && mDetailMode == 0) {
                         Random randomGenerator = new Random();
                         int randomInt = randomGenerator.nextInt(4);
                         String randspeech = defaultSpeech.get(randomInt);
                         ttsClient.play(randspeech);
-                    } else if (hapticpress == 0 && mDetailMode > 0) {
+                    } else if (hapticpress == 0 && hapticpress2 == 0 && mDetailMode > 0) {
                         ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
                         if (data.size() >= mDetailMode) {
                             ttsClient.play("가이드를 말씀드릴게요. " + data.get(mDetailMode - 1).getGuideList().get(0));
@@ -456,50 +439,39 @@ public class InteractionManager {
                         mDetailMode = 0;
                     }
 
-                    if (hapticpress == 1 && mDetailMode == 0) {
+                    else if (hapticpress == 1 && hapticpress2 == 0 && mDetailMode == 0) {
                         ttsClient.play("일정 완료를 체크하였습니다.");
-
-                        AssistantFragment assistant = (AssistantFragment) mActivity.getSupportFragmentManager().findFragmentById(R.id.partner_container);
-                        if (assistant != null) {
-                            Log.d("test", "assistant getget");
-                            assistant.moveDataToCompletedList(0);
-                        }
 
                         ArrayList<AssistantListData> data = UserManager.getInstance().getCurrentUserInfo().mScheduleInfoList;
                         Log.d("handler", "number of data" + data.size());
                         for (int i = 0; i < data.size(); i++) {
                             // TODO:Check what is done and output index
-//                        data.
-//                        mResult.contain(data.get(i));
+
                         }
-                        //int idx = 1 ;//= data.indexOf();
-                        assistant.moveDataToCompletedList(1);
+                        AssistantFragment assistant = (AssistantFragment) mActivity.getSupportFragmentManager().findFragmentById(R.id.partner_container);
+                        if (assistant != null) {
+                            Log.d("test", "assistant getget");
+                            assistant.moveDataToCompletedList(0);
+                        }
                         hapticpress = 0;
 
                     }
 
-                    if (hapticpress2 == 1 && mDetailMode == 0) {
+                    else if (hapticpress == 0 && hapticpress2 == 1 && mDetailMode == 0) {
                         ttsClient.play("목표 완료를 체크하였습니다.");
 
+                        ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
+                        Log.d("handler", "number of data" + data.size());
+                        for (int i = 0; i < data.size(); i++) {
+                            // TODO:Check what is done and output index
+                        }
 
                         AchievementFragment achievement = (AchievementFragment) mActivity.getSupportFragmentManager().findFragmentById(R.id.partner_container);
                         if (achievement != null) {
                             Log.d("test", "assistant getget");
                             achievement.moveDataToCompletedList(0);
                         }
-
-                        ArrayList<AchievementListData> data = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList;
-                        Log.d("handler", "number of data" + data.size());
-                        for (int i = 0; i < data.size(); i++) {
-                            // TODO:Check what is done and output index
-//                        data.
-//                                mResult.contain(data.get(i));
-                        }
-                        //int idx = 1 ;//= data.indexOf();
-                        achievement.moveDataToCompletedList(1);
-
                         hapticpress2 = 0;
-
                     }
 
                     prevtime = currenttime;
