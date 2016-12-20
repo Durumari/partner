@@ -308,7 +308,7 @@ public class InteractionManager {
                     talk += data.get(index).getTitle() + ". ";
                 ttsClient.play(talk+ "총 " + data.size() + "개의 일정이 있어요");
             }
-        }
+        
             hapticpress = 1;
 
         }
