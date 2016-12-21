@@ -90,7 +90,7 @@ public class InteractionManager {
         defaultSpeech.add("안녕하세요, 저는 파트너입니다");
         defaultSpeech.add("저한테 물어보기전에 파트너라고 앞에 먼저 불러주세요");
         defaultSpeech.add("궁금한게 있으면, 목표, 일정, 보상 에 대해서 물어봐주세요");
-        defaultSpeech.add("오늘 일정 물어봐요");
+        defaultSpeech.add("오늘 일정 물어봐주세요");
         defaultSpeech.add("목표가 어떤게 있는지 확인하려면, 파트너, 목표 리스트 좀 보여줘, 라고 말해주세요");
         defaultSpeech.add("어떤 선물이 있는 지 궁금하신가요? 파트너, 보상 리스트 좀 보여줘, 라고 말해주세요");
         defaultSpeech.add("제 배를 봐주세요. 많은 정보를 볼 수 있습니다");
@@ -237,7 +237,7 @@ public class InteractionManager {
 
     //Check SystemMode
     boolean checkSystemMode(){
-        if(mResult.contains("보고 싶으시면"))
+        if(mResult.contains("보고 싶으시면") || mResult.contains("말해주세요") || mResult.contains("물어봐주세요"))
             return false;
         if(mResult.contains("파트너")) {
             if (mResult.contains("일정")) {
