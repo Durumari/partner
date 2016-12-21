@@ -2,6 +2,7 @@ package com.a3did.partner.partner;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -20,6 +21,7 @@ import android.os.Message;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -43,6 +45,7 @@ import com.a3did.partner.account.PartnerUserInfo;
 import com.a3did.partner.account.UserManager;
 import com.a3did.partner.adapterlist.AchievementListData;
 import com.a3did.partner.adapterlist.AssistantListData;
+import com.a3did.partner.adapterlist.RewardListData;
 import com.a3did.partner.fragmentlist.AccountFragment;
 import com.a3did.partner.fragmentlist.AchievementFragment;
 import com.a3did.partner.fragmentlist.AssistantFragment;
@@ -306,6 +309,12 @@ public class MainActivity extends RecoRangingActivity
                         break;
                     case R.layout.fragment_safety:
                         title = "Safety";
+                        UserManager userManager = UserManager.getInstance();
+                        PartnerUserInfo userInfo = userManager.getCurrentUserInfo();
+                       // RewardListData data = userInfo.mRewardInfoList.get(index);
+
+                        sendMessage(userInfo.mParentPhoneNumber,"[Partner] " + userInfo.mName +"이가 지정된 위험지역에 들어갔어요!! 빨리 연락해보세요~!");
+
                         break;
                     case R.layout.fragment_reward:
                         title = "Reward";
@@ -355,7 +364,40 @@ public class MainActivity extends RecoRangingActivity
 
 
     }
+    public void sendMessage(String number, String text){
 
+        if (number.length()>0 && text.length()>0) {
+            sendSMS(number, text);
+        }
+    }
+    public void sendSMS(String smsNumber, String smsText){
+        PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT_ACTION"), 0);
+        PendingIntent deliveredIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
+
+
+
+        this.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch (getResultCode()){
+                    case Activity.RESULT_OK:
+                        // 도착 완료
+                        Log.d("Partner", "도착 완료");
+                        //Toast.makeText(mContext, "SMS 도착 완료", Toast.LENGTH_SHORT).show();
+                        break;
+                    case Activity.RESULT_CANCELED:
+
+                        // 도착 안됨
+                        Log.d("Partner", "도착 안됨");
+                        //Toast.makeText(mContext, "SMS 도착 실패", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        }, new IntentFilter("SMS_DELIVERED_ACTION"));
+
+        SmsManager mSmsManager = SmsManager.getDefault();
+        mSmsManager.sendTextMessage(smsNumber, null, smsText, sentIntent, deliveredIntent);
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
