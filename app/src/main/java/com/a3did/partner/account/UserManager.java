@@ -112,13 +112,13 @@ public class UserManager {
 
         achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
-                "집 어지럽히지 않고 5일 유지하기", 5, "11월 19일 오후 4시", "11월 24일 오후 4시");
+                "집 청소 일주일 동안하기", 5, "11월 19일 오후 4시", "11월 24일 오후 4시");
         achievementlistData.addGuide("쓰고난 물건은 제자리에 두세요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
-                "두시간 집중해서 독서하기", 1, "11월 19일 오후 5시", "11월 29일 오후 7시");
+                "2시간 집중해서 독서하기", 1, "11월 19일 오후 5시", "11월 29일 오후 7시");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         achievementlistData = new AchievementListData();
@@ -129,7 +129,7 @@ public class UserManager {
 
         achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
-                "수학 시험 100점 맞기", 10, "11월 19일 오후 3시", "12월 20일 오후 3시");
+                "수학시험 100점 맞기", 10, "11월 19일 오후 3시", "12월 20일 오후 3시");
         achievementlistData.addGuide("선생님이 내주신 숙제만 잘하면 돼요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 

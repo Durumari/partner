@@ -149,6 +149,10 @@ public class MainActivity extends RecoRangingActivity
         }
 //        service_init();
 
+
+//        String deviceAddress = "DB:E7:DF:00:57:83";
+//        mService.connect(deviceAddress);
+
         btnConnectDisconnect=(Button) findViewById(R.id.fab2);
         btnConnectDisconnect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -267,6 +271,8 @@ public class MainActivity extends RecoRangingActivity
             @Override
             public void onClick(View view) {
                                String title = "";
+                String deviceAddress = "DB:E7:DF:00:57:83";
+                mService.connect(deviceAddress);
                 switch (mFragmentID)
                 {
                     case R.layout.fragment_default:
