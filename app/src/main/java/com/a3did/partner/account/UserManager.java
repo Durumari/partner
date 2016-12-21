@@ -80,56 +80,56 @@ public class UserManager {
         //assistant
         AssistantListData listData = new AssistantListData();
         listData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_black_24dp),
-                "수학 숙제하기", "11월 19일 오후 4시") ;
+                "수학 숙제하기", "12월 22일 오후 4시") ;
         userInfo.mScheduleInfoList.add(listData);
 
         listData = new AssistantListData();
         listData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_home_black_24dp),
-                "강아지 먹이주기", "11월 19일 오후 5시") ;
+                "강아지 먹이주기", "12월 22일 오후 5시") ;
         userInfo.mScheduleInfoList.add(listData);
 
         listData = new AssistantListData();
         listData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
-                "미술학원 가기", "11월 19일 오후 6시") ;
+                "미술학원 가기", "12월 22일 오후 6시") ;
         userInfo.mScheduleInfoList.add(listData);
 
         listData = new AssistantListData();
         listData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_assignment_black_24dp),
-                "인터넷 강의 보기", "11월 19일 오후 8시") ;
+                "인터넷 강의 보기", "12월 22일 오후 8시") ;
         userInfo.mScheduleInfoList.add(listData);
 
         listData = new AssistantListData();
         listData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_home_black_24dp),
-                "자기 전에 영양제먹기", "11월 19일 오후 9시") ;
+                "자기 전에 영양제먹기", "12월 22일 오후 9시") ;
         userInfo.mScheduleInfoList.add(listData);
 
         //achievement
         AchievementListData achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
-                "강아지 목욕시켜주기", 1, "11월 20일 오후 8시", "11월 20일 오후 9시");
+                "강아지 목욕시켜주기", 1, "12월 22일 오후 8시", "12월 22일 오후 9시");
         achievementlistData.addGuide("따뜻한 물을 미리 받아 놓아요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
-                "집 청소 일주일 동안하기", 5, "11월 19일 오후 4시", "11월 24일 오후 4시");
+                "집 청소 일주일 동안하기", 5, "12월 22일 오후 4시", "12월 29일 오후 4시");
         achievementlistData.addGuide("쓰고난 물건은 제자리에 두세요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
-                "2시간 집중해서 독서하기", 1, "11월 19일 오후 5시", "11월 29일 오후 7시");
+                "2시간 집중해서 독서하기", 1, "12월 22일 오후 5시", "12월 22일 오후 7시");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
-                "운동 주 5회 하기", 2, "11월 19일 오후 9시", "11월 26일 오후 9시");
+                "운동 주 5회 하기", 2, "12월 22일 오후 9시", "12월 26일 오후 9시");
         achievementlistData.addGuide("강아지랑 공원으로 나갔다 오세요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
         achievementlistData = new AchievementListData();
         achievementlistData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_bookmark_border_black_24dp),
-                "수학시험 100점 맞기", 10, "11월 19일 오후 3시", "12월 20일 오후 3시");
+                "수학시험 100점 맞기", 10, "12월 22일 오후 3시", "12월 20일 오후 3시");
         achievementlistData.addGuide("선생님이 내주신 숙제만 잘하면 돼요");
         userInfo.mAchievementInfoList.add(achievementlistData);
 
@@ -137,7 +137,7 @@ public class UserManager {
         RewardListData rewardListData = new RewardListData();
         // 첫 번째 아이템 추가.
         rewardListData.setItem(ContextCompat.getDrawable(mContext, R.drawable.ic_card_giftcard_black_24dp),
-                "뽀로로 컴퓨터 사기", 100); ;
+                "뽀로로 컴퓨터", 100); ;
         userInfo.mRewardInfoList.add(rewardListData);
         // 두 번째 아이템 추가.
         rewardListData = new RewardListData();

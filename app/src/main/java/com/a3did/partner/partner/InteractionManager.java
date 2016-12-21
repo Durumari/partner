@@ -60,6 +60,7 @@ public class InteractionManager {
     private int hapticinputcount = 0;
     public int hapticpress = 0;
     public int hapticpress2 = 0;
+    public boolean enableRecognition = true;
     public enum MenuType{
         DEFAULT,
         ASSISTANT,
@@ -88,16 +89,15 @@ public class InteractionManager {
         mSystemMode = MenuType.DEFAULT;
         mDetailMode = 0;
         defaultSpeech.add("안녕하세요, 저는 파트너입니다");
-        defaultSpeech.add("저한테 물어보기전에 파트너라고 앞에 먼저 불러주세요");
-        defaultSpeech.add("궁금한게 있으면, 목표, 일정, 보상 에 대해서 물어봐주세요");
+        defaultSpeech.add("어떤 리스트를 보고 싶으시면, 파트너, 라고 어떤 리스트 보여 달라고, 불러주세요");
+        defaultSpeech.add("궁금한게 있으면, 목표, 일정, 선물 에 대해서 물어봐주세요");
         defaultSpeech.add("오늘 일정 물어봐주세요");
         defaultSpeech.add("목표가 어떤게 있는지 확인하려면, 파트너, 목표 리스트 좀 보여줘, 라고 말해주세요");
-        defaultSpeech.add("어떤 선물이 있는 지 궁금하신가요? 파트너, 보상 리스트 좀 보여줘, 라고 말해주세요");
+        defaultSpeech.add("어떤 선물이 있는 지 궁금하신가요? 파트너, 선물 리스트 좀 보여줘, 라고 말해주세요");
         defaultSpeech.add("제 배를 봐주세요. 많은 정보를 볼 수 있습니다");
-        defaultSpeech.add("어떤 선물이 있는 지 궁금하신가요? 파트너, 보상 리스트 좀 보여줘, 라고 말해주세요");
-        defaultSpeech.add("다음 목표를 보시려면 , '먼저 할 목표' 라고 말해주세요 ");
-        defaultSpeech.add("다음 일정를  , '먼저 할 목표' 라고 말해주세요 ");
-        defaultSpeech.add("어떤 선물이 있는 지 궁금하신가요? 파트너, 보상 리스트 좀 보여줘, 라고 말해주세요");
+        defaultSpeech.add("어떤 일정이 있는 지 궁금하신가요? 파트너, 일정 리스트 좀 보여줘, 라고 말해주세요");
+        defaultSpeech.add("먼저 할 목표를 보시려면 , 목표 탭에서 '먼저 할 목표' 라고 말해주세요 ");
+        defaultSpeech.add("어떤 선물이 있는 지 궁금하신가요? 파트너, 선물 리스트 좀 보여줘, 라고 말해주세요");
 
 
 
@@ -218,8 +218,11 @@ public class InteractionManager {
 
                             Log.d("Partner","re-connect Recognizer");
                             //if()
-                            if(!mNaverRecognizer.getSpeechRecognizer().isRunning())
-                                mNaverRecognizer.recognize();
+                            if(enableRecognition){
+                                if(!mNaverRecognizer.getSpeechRecognizer().isRunning())
+                                    mNaverRecognizer.recognize();
+                            }
+
 
 
                         }
@@ -228,7 +231,7 @@ public class InteractionManager {
 
             break;
         }
-        Log.d("Partner","ID" + msg.what + "text result : " + mResult);
+        //Log.d("Partner","ID" + msg.what + "text result : " + mResult);
 
 
 
@@ -237,47 +240,60 @@ public class InteractionManager {
 
     //Check SystemMode
     boolean checkSystemMode(){
-        if(mResult.contains("보고 싶으시면") || mResult.contains("말해주세요") || mResult.contains("물어봐주세요"))
+        if(mResult.contains("보고 싶으시면") || mResult.contains("말해주세요") || mResult.contains("물어봐주세요") || mResult.contains("말해볼래요"))
             return false;
         if(mResult.contains("파트너")) {
             if (mResult.contains("일정")) {
-                ttsClient.play("네 일정 보여드릴게요.");
+                ttsClient.play("네 일정 리스트 보여드릴게요.");
                 mActivity.transitionFragment(R.id.nav_assistant);
                 mSystemMode = MenuType.ASSISTANT;
                 return true;
             } else if (mResult.contains("목표")) {
-                ttsClient.play("네 목표 보여드릴게요.");
+                ttsClient.play("네 목표 리스트 보여드릴게요.");
                 mActivity.transitionFragment(R.id.nav_achievement);
                 mSystemMode = MenuType.ACHIEVEMENT;
                 return true;
-            } else if (mResult.contains("보상")) {
-                ttsClient.play("네 보상 탭 보여드릴게요.");
+            } else if (mResult.contains("선물")) {
+                ttsClient.play("네 선물 리스트 보여드릴게요.");
                 mActivity.transitionFragment(R.id.nav_reward);
                 mSystemMode = MenuType.REWARD;
                 return true;
             } else if (mResult.contains("계정")) {
-                ttsClient.play("네 계정 탭 보여드릴게요.");
+                ttsClient.play("네 계정 리스트 보여드릴게요.");
                 mActivity.transitionFragment(R.id.nav_account);
                 mSystemMode = MenuType.ACCOUNT;
                 return true;
 
             } else if (mResult.contains("보안")) {
-                ttsClient.play("네 보안 탭 보여드릴게요.");
+                ttsClient.play("네 보안 리스트 보여드릴게요.");
                 mActivity.transitionFragment(R.id.nav_safety);
                 mSystemMode = MenuType.SAFETY;
                 return true;
 
             } else if (mResult.contains("완료")) {
-                ttsClient.play("네 완료리스트 보여드릴게요.");
+                ttsClient.play("네 완료 리스트 보여드릴게요.");
                 mActivity.transitionFragment(R.id.nav_completed_list);
                 mSystemMode = MenuType.COMPLETED;
                 return true;
             } else if (mResult.contains("실패")) {
-                ttsClient.play("네 실패리스트 보여드릴게요.");
+                ttsClient.play("네 실패 리스트 보여드릴게요.");
                 mActivity.transitionFragment(R.id.nav_missed_list);
                 mSystemMode = MenuType.MISSED;
                 return true;
             }
+        }
+
+        if(mResult.contains("발표를 마치겠습니다")){
+            ttsClient.play("모두 감사해요~~");
+        }
+
+
+        //종료 시 먼저 말하고 종료하면 에러 안남
+        if(mResult.contains("시연 끝") || mResult.contains("시연끝") || mResult.contains("시험끝") || mResult.contains("시험 끝")){
+            enableRecognition = false;
+        }
+        if(mResult.contains("시연 시작") || mResult.contains("시연시작")){
+            enableRecognition = true;
         }
 
         return true;
@@ -321,10 +337,8 @@ public class InteractionManager {
 
 
         }
-        else if (mResult.contains("완료 했어") || mResult.contains("완료했어")){
-            ttsClient.play("손을 만져줘");
-            //hapticpress = 1;
-            ttsClient.play("손을 만져줘");
+        else if (mResult.contains("확인 했어") || mResult.contains("확인했어") || mResult.contains("완료 했어") || mResult.contains("완료했어")){
+            ttsClient.play("제 앞에 와서, 손을 눌러주세요, 그러면 확인 처리 할게요");
             Log.d("speech text:" , mResult);
             String delims = "[ ]";
             tokens = mResult.split(delims);
@@ -335,11 +349,11 @@ public class InteractionManager {
     }
     //Achievement Action
     private void AchievementAction(){
-        if(mResult.contains("오늘 목표") || mResult.contains("오늘목표"))
+        if(mResult.contains("지금 목표") || mResult.contains("지금목표"))
         {
             int size = UserManager.getInstance().getCurrentUserInfo().mAchievementInfoList.size();
             if(size == 0){
-                ttsClient.play("오늘 정해둔 목표가 없어요");
+                ttsClient.play("현재 정해둔 목표가 없어요");
             }
             else
             {
@@ -375,18 +389,20 @@ public class InteractionManager {
             mDetailMode = 1;
 
         }else if(mResult.contains("두번째 목표 가이드") ){
+            ttsClient.play("제 앞으로 와서, 손을 눌러주세요.");
             mDetailMode = 2;
 
         }else if(mResult.contains("세번째 목표 가이드") ){
+            ttsClient.play("제 앞으로 와서, 손을 눌러주세요.");
             mDetailMode = 3;
 
         }else if(mResult.contains("네번째 목표 가이드") ){
-            //ttsClient.play("제 앞으로 와서, 손을 눌러주세요.");
+            ttsClient.play("제 앞으로 와서, 손을 눌러주세요.");
             mDetailMode = 4;
 
         }
         else if (mResult.contains("완료 했어") || mResult.contains("완료했어")){
-            ttsClient.play("손을 만져줘");
+            ttsClient.play("제 앞에 와서, 손을 눌러주세요, 그러면 완료 처리 할게요");
             Log.d("speech text:" , mResult);
             String delims = "[ ]";
             tokens = mResult.split(delims);
@@ -406,12 +422,12 @@ public class InteractionManager {
             ttsClient.play("총 " + size + "개의 별을 모았어요");
 
         }
-        else if(mResult.contains("어떤 보상") || mResult.contains("어떤보상"))
+        else if(mResult.contains("어떤 선물") || mResult.contains("어떤선물"))
         {
             int size = UserManager.getInstance().getCurrentUserInfo().mStarNumber;
             ArrayList<RewardListData> data = UserManager.getInstance().getCurrentUserInfo().mRewardInfoList;
             if(data.size() == 0){
-                ttsClient.play("등록된 보상이 없어요");
+                ttsClient.play("등록된 선물이 없어요");
             }
             else{
                 int count = 0;
@@ -420,21 +436,24 @@ public class InteractionManager {
                     count++;
                 }
             }
-            ttsClient.play("현재 별 " + size+ "개로 받을 수 있는 보상은 총 " + count+ "가지 있네요");
+            ttsClient.play("현재 별 " + size+ "개로 받을 수 있는 선물은 총 " + count+ "가지 있네요");
             //추가로 설명 해 주려면? 아래에
             }
         }
-        else if(mResult.contains("모든 보상") || mResult.contains("모든보상") ){
+        else if(mResult.contains("모든 선물") || mResult.contains("모든선물") ){
             ArrayList<RewardListData> data = UserManager.getInstance().getCurrentUserInfo().mRewardInfoList;
             if(data.size() == 0){
-                ttsClient.play("등록된 보상이 없어요");
+                ttsClient.play("등록된 선물이 없어요");
             }
             else{
-                String talk = "등록된 보상들을 말씀드릴게요.";
+                String talk = "등록된 선물들을 말씀드릴게요.";
                 for(int index = 0 ; index < data.size() ; index++)
                     talk += data.get(index).getTitle() + ". ";
-                ttsClient.play(talk+ "총 " + data.size() + "개의 보상이 있어요");
+                ttsClient.play(talk+ "총 " + data.size() + "개의 선물이 있어요");
             }
+        }
+        else if(mResult.contains("고마워")){
+            ttsClient.play("자주 저랑 이야기해요~");
         }
     }
 
@@ -450,7 +469,7 @@ public class InteractionManager {
 
                     if (hapticpress == 0 && hapticpress2 == 0 && mDetailMode == 0) {
                         Random randomGenerator = new Random();
-                        int randomInt = randomGenerator.nextInt(4);
+                        int randomInt = randomGenerator.nextInt(9);
                         String randspeech = defaultSpeech.get(randomInt);
                         ttsClient.play(randspeech);
                     } else if (hapticpress == 0 && hapticpress2 == 0 && mDetailMode > 0) {

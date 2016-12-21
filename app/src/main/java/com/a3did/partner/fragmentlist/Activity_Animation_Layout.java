@@ -148,7 +148,7 @@ public class Activity_Animation_Layout extends View implements View.OnTouchListe
                         manager.ttsClient.play("목표 리스트를 보고 싶으시면, 파트너, 목표 리스트 좀 보여줘, 라고 말해볼래요?");
                         break;
                     case 2:
-                        manager.ttsClient.play("보상 리스트를 보고 싶으시면, 파트너, 보상 리스트 좀 보여줘, 라고 말해볼래요?");
+                        manager.ttsClient.play("선물 리스트를 보고 싶으시면, 파트너, 선물 리스트 좀 보여줘, 라고 말해볼래요?");
                         break;
                     case 3:
                         manager.ttsClient.play("저를 눌러 보시면, 사용법을 알려드려요~");
